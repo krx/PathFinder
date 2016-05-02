@@ -14,6 +14,8 @@ namespace PathFinder {
     }
 
     class Node : INotifyPropertyChanged {
+        public static readonly double Nodesize = 20;
+
         private Dictionary<NodeState, Color> cmap = new Dictionary<NodeState, Color>() {
             {NodeState.Empty, Colors.White },
             {NodeState.Wall, Colors.Gray },

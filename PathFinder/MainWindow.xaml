@@ -110,7 +110,9 @@
 
                 <!--Template for Node-->
                 <DataTemplate DataType="{x:Type pf:Node}">
-                    <Rectangle Stroke="Black" StrokeThickness="0.5"  Width="20" Height="20">
+                    <Rectangle Stroke="#C8C8C8" StrokeThickness="1"
+                               Width="{x:Static pf:Node.Nodesize}"
+                               Height="{x:Static pf:Node.Nodesize}">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="{Binding Color}" />
                         </Rectangle.Fill>

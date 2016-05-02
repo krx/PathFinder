@@ -51,11 +51,10 @@ namespace PathFinder {
 
     class NodeIdxToCoord : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-            return (int) value * (int) 20;
+            return (int) value * (int) Node.Nodesize;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-            //            return (int) value / (int) 20;
             throw new NotImplementedException();
         }
     }
