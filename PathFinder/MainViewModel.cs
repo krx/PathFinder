@@ -9,61 +9,71 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace PathFinder
-{
-	class MainViewModel : INotifyPropertyChanged {
-		private ObservableCollection<Node> _nodes;
-		private AlgorithmType _algorithm;
-		private HeuristicType _heuristic;
+namespace PathFinder {
+    class MainViewModel : INotifyPropertyChanged {
+        private Grid _grid;
+        public Grid Grid { get { return _grid; } }
 
-		public ObservableCollection<Node> Nodes { get { return _nodes ?? (_nodes = new ObservableCollection<Node>()); } }
+        private AlgorithmType _algorithm;
+        public AlgorithmType Algorithm { get { return _algorithm; } set { _algorithm = value; OnPropertyChanged("Algorithm"); } }
 
-		public AlgorithmType Algorithm { get { return _algorithm; } set { _algorithm = value; OnPropertyChanged("Algorithm"); } }
+        private HeuristicType _heuristic;
+        public HeuristicType Heuristic { get { return _heuristic; } set { _heuristic = value; OnPropertyChanged("Heuristic"); } }
 
-		public HeuristicType Heuristic { get { return _heuristic; } set { _heuristic = value; OnPropertyChanged("Heuristic"); } }
+        public int NodeSize = 10;
 
-		public MainViewModel() {
+        public MainViewModel() {
+            _grid = new Grid();
+            Grid[0, 0].State = NodeState.Start;
+            Grid[0, 1].State = NodeState.End;
+        }
 
-		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-
-		protected virtual void OnPropertyChanged(string propertyName)
-		{
-			PropertyChangedEventHandler handler = PropertyChanged;
-			if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-		}
+        public event PropertyChangedEventHandler PropertyChanged;
 
 
-	}
+        protected virtual void OnPropertyChanged(string propertyName) {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
-	public class RadioIsCheckedConverter : IValueConverter
-	{
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			return parameter.Equals(value);
-		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			return (bool)value ? parameter : Binding.DoNothing;
-		}
-	}
 
-	public enum HeuristicType {
-		Manhattan,
-		Euclidean,
-		Chebyshev
-	}
+    }
 
-	public enum AlgorithmType {
-		AStar,
-		BreadthFirst,
-		DepthFirst,
-		HillClimbing,
-		BestFirst,
-		Dijkstra,
-		JumpPoint
-	}
+    public class RadioIsCheckedConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+            return parameter.Equals(value);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+            return (bool) value ? parameter : Binding.DoNothing;
+        }
+    }
+
+    class NodeIdxToCoord : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+            return (int) value * (int) 20;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+            //            return (int) value / (int) 20;
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public enum HeuristicType {
+        Manhattan,
+        Euclidean,
+        Chebyshev
+    }
+
+    public enum AlgorithmType {
+        AStar,
+        BreadthFirst,
+        DepthFirst,
+        HillClimbing,
+        BestFirst,
+        Dijkstra,
+        JumpPoint
+    }
 }

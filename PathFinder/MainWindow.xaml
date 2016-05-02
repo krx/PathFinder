@@ -3,100 +3,140 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:wintk="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
 		xmlns:pf="clr-namespace:PathFinder"
-        Title="PathFinder" Height="600" Width="800">
-	<Window.Resources>
-		<pf:RadioIsCheckedConverter x:Key="RadioIsChecked"></pf:RadioIsCheckedConverter>
-	</Window.Resources>
-	<DockPanel>
-		<DockPanel DockPanel.Dock="Right">
-			
-			<GroupBox Header="Grid Controls" DockPanel.Dock="Bottom">
-				<StackPanel Orientation="Vertical">
-					<Button>Clear Walls</Button>
-					<Button>Clear Path</Button>
-					<Button>Generate Maze</Button>
-				</StackPanel>
-			</GroupBox>
-			
-			<GroupBox Header="Playback Controls" DockPanel.Dock="Bottom">
-				<StackPanel Orientation="Vertical">
-					<Button Click="Button_Click">Start</Button>
-					<Button>Pause</Button>
-					<Button>Stop</Button>
-				</StackPanel>
-			</GroupBox>
-			
-			<GroupBox Header="Search Options">
-				<StackPanel Orientation="Vertical">
-					<GroupBox Header="Algorithm">
-						<StackPanel Orientation="Vertical">
-							<RadioButton IsChecked="{Binding Algorithm, 
+        Title="PathFinder" Height="600" Width="800"
+        x:Name="view">
+    <Window.Resources>
+        <pf:RadioIsCheckedConverter x:Key="RadioIsChecked"></pf:RadioIsCheckedConverter>
+        <pf:NodeIdxToCoord x:Key="NodeIdxToCoord"></pf:NodeIdxToCoord>
+    </Window.Resources>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Right">
+
+            <GroupBox Header="Grid Controls" DockPanel.Dock="Bottom">
+                <StackPanel Orientation="Vertical">
+                    <Button>Clear Walls</Button>
+                    <Button>Clear Path</Button>
+                    <Button>Generate Maze</Button>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Playback Controls" DockPanel.Dock="Bottom">
+                <StackPanel Orientation="Vertical">
+                    <Button Click="Button_Click">Start</Button>
+                    <Button>Pause</Button>
+                    <Button>Stop</Button>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Search Options">
+                <StackPanel Orientation="Vertical">
+                    <GroupBox Header="Algorithm">
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton IsChecked="{Binding Algorithm, 
 								Converter={StaticResource RadioIsChecked}, 
 								ConverterParameter={x:Static pf:AlgorithmType.AStar}}">
-								A-Star
-							</RadioButton>
-							<RadioButton IsChecked="{Binding Algorithm, 
+                                A-Star
+                            </RadioButton>
+                            <RadioButton IsChecked="{Binding Algorithm, 
 								Converter={StaticResource RadioIsChecked}, 
 								ConverterParameter={x:Static pf:AlgorithmType.BreadthFirst}}">
-								Breadth-First
-							</RadioButton>
-							<RadioButton IsChecked="{Binding Algorithm, 
+                                Breadth-First
+                            </RadioButton>
+                            <RadioButton IsChecked="{Binding Algorithm, 
 								Converter={StaticResource RadioIsChecked}, 
 								ConverterParameter={x:Static pf:AlgorithmType.DepthFirst}}">
-								Depth-First
-							</RadioButton>
-							<RadioButton IsChecked="{Binding Algorithm, 
+                                Depth-First
+                            </RadioButton>
+                            <RadioButton IsChecked="{Binding Algorithm, 
 								Converter={StaticResource RadioIsChecked},
 								ConverterParameter={x:Static pf:AlgorithmType.HillClimbing}}">
-								Hill Climbing
-							</RadioButton>
-							<RadioButton IsChecked="{Binding Algorithm, 
+                                Hill Climbing
+                            </RadioButton>
+                            <RadioButton IsChecked="{Binding Algorithm, 
 								Converter={StaticResource RadioIsChecked}, 
 								ConverterParameter={x:Static pf:AlgorithmType.BestFirst}}">
-								Best-First
-							</RadioButton>
-							<RadioButton IsChecked="{Binding Algorithm, 
+                                Best-First
+                            </RadioButton>
+                            <RadioButton IsChecked="{Binding Algorithm, 
 								Converter={StaticResource RadioIsChecked}, 
 								ConverterParameter={x:Static pf:AlgorithmType.Dijkstra}}">
-								Dijkstra
-							</RadioButton>
-							<RadioButton IsChecked="{Binding Algorithm, 
+                                Dijkstra
+                            </RadioButton>
+                            <RadioButton IsChecked="{Binding Algorithm, 
 								Converter={StaticResource RadioIsChecked}, 
 								ConverterParameter={x:Static pf:AlgorithmType.JumpPoint}}">
-								Jump Point Search
-							</RadioButton>
-						</StackPanel>
-					</GroupBox>
-					
-					<GroupBox Header="Heuristic Function">
-						<StackPanel Orientation="Vertical">
-							<RadioButton IsChecked="{Binding Heuristic, 
+                                Jump Point Search
+                            </RadioButton>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Heuristic Function">
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton IsChecked="{Binding Heuristic, 
 								Converter={StaticResource RadioIsChecked}, 
 								ConverterParameter={x:Static pf:HeuristicType.Manhattan}}">
-								Manhattan
-							</RadioButton>
-							<RadioButton IsChecked="{Binding Heuristic, 
+                                Manhattan
+                            </RadioButton>
+                            <RadioButton IsChecked="{Binding Heuristic, 
 								Converter={StaticResource RadioIsChecked}, 
 								ConverterParameter={x:Static pf:HeuristicType.Euclidean}}">
-								Euclidean
-							</RadioButton>
-							<RadioButton IsChecked="{Binding Heuristic, 
+                                Euclidean
+                            </RadioButton>
+                            <RadioButton IsChecked="{Binding Heuristic, 
 								Converter={StaticResource RadioIsChecked}, 
 								ConverterParameter={x:Static pf:HeuristicType.Chebyshev}}">
-								Chebyshev
-							</RadioButton>
-						</StackPanel>
-					</GroupBox>
-					
-					<GroupBox Header="Optional Settings">
-						<StackPanel Orientation="Vertical">
-							<CheckBox>Diagonals Allowed</CheckBox>
-							<CheckBox>Corner Crossing Allowed</CheckBox>
-						</StackPanel>
-					</GroupBox>
-				</StackPanel>
-			</GroupBox>
-		</DockPanel>
-		<Canvas></Canvas>
-	</DockPanel>
+                                Chebyshev
+                            </RadioButton>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Optional Settings">
+                        <StackPanel Orientation="Vertical">
+                            <CheckBox>Diagonals Allowed</CheckBox>
+                            <CheckBox>Corner Crossing Allowed</CheckBox>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </GroupBox>
+        </DockPanel>
+
+        <!-- Canvas to display all dynamic elements -->
+        <ItemsControl>
+            <ItemsControl.Resources>
+                <!-- Combine all lists into one -->
+                <CompositeCollection x:Key="Col">
+                    <CollectionContainer Collection="{Binding DataContext.Grid.Nodes,Source={x:Reference view}}" />
+                </CompositeCollection>
+
+                <!--Template for Node-->
+                <DataTemplate DataType="{x:Type pf:Node}">
+                    <Rectangle Stroke="Black" StrokeThickness="0.5"  Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{Binding Color}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </DataTemplate>
+            </ItemsControl.Resources>
+
+            <ItemsControl.ItemsSource>
+                <StaticResource ResourceKey="Col" />
+            </ItemsControl.ItemsSource>
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas IsItemsHost="True" Background="White"
+                            Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualWidth}"
+                            Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualHeight}"
+                            VerticalAlignment="Top" HorizontalAlignment="Left" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding X, Converter={StaticResource NodeIdxToCoord}}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Y, Converter={StaticResource NodeIdxToCoord}}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
+    </DockPanel>
 </Window>
