@@ -71,19 +71,19 @@
 
                     <GroupBox Header="Heuristic Function">
                         <StackPanel Orientation="Vertical">
-                            <RadioButton IsChecked="{Binding Heuristic, 
-								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:HeuristicType.Manhattan}}">
+                            <RadioButton IsChecked="{Binding HeuristicFunction, 
+								Converter={StaticResource RadioIsChecked},
+								ConverterParameter={x:Static pf:Heuristic.Manhattan}}">
                                 Manhattan
                             </RadioButton>
-                            <RadioButton IsChecked="{Binding Heuristic, 
+                            <RadioButton IsChecked="{Binding HeuristicFunction, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:HeuristicType.Euclidean}}">
+								ConverterParameter={x:Static pf:Heuristic.Euclidean}}">
                                 Euclidean
                             </RadioButton>
-                            <RadioButton IsChecked="{Binding Heuristic, 
+                            <RadioButton IsChecked="{Binding HeuristicFunction, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:HeuristicType.Chebyshev}}">
+								ConverterParameter={x:Static pf:Heuristic.Chebyshev}}">
                                 Chebyshev
                             </RadioButton>
                         </StackPanel>

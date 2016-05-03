@@ -21,8 +21,8 @@ namespace PathFinder {
         private AlgorithmType _algorithm;
         public AlgorithmType Algorithm { get { return _algorithm; } set { _algorithm = value; OnPropertyChanged("Algorithm"); } }
 
-        private HeuristicType _heuristic;
-        public HeuristicType Heuristic { get { return _heuristic; } set { _heuristic = value; OnPropertyChanged("Heuristic"); } }
+        private HeuristicFunc _heuristic;
+        public HeuristicFunc HeuristicFunction { get { return _heuristic; } set { _heuristic = value; OnPropertyChanged("HeuristicFunction"); } }
 
         // Private variables
         private int mouseXIdx;
@@ -42,6 +42,9 @@ namespace PathFinder {
                 [0, 0] = { State = NodeState.Start },
                 [0, 1] = { State = NodeState.End }
             };
+
+            Algorithm = AlgorithmType.AStar;
+            HeuristicFunction = Heuristic.Manhattan;
 
             ClearWallsCommand = new RelayCommand(o => ClearWalls());
             ClearPathCommand = new RelayCommand(o => ClearPath());
@@ -165,13 +168,6 @@ namespace PathFinder {
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
             throw new NotImplementedException();
         }
-    }
-
-
-    public enum HeuristicType {
-        Manhattan,
-        Euclidean,
-        Chebyshev
     }
 
     public enum AlgorithmType {
