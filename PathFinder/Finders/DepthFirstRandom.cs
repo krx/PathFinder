@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace PathFinder.Finders {
     class DepthFirstRandom {
-        public static List<Node> Search(Node start, Node end, Grid grid, HeuristicFunc heuristic, bool diagAllowed,
-            bool crossDiagAllowed, History hist) {
+        public static List<Node> Search(Node start, Node end, Grid grid, HeuristicFunc heuristic, bool diagAllowed, bool crossDiagAllowed, History hist) {
             if (!end.IsWalkable) return null;
             List<Node> closed = new List<Node>();
             Node current = start;

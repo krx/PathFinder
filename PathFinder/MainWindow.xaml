@@ -31,41 +31,30 @@
                 <StackPanel Orientation="Vertical">
                     <GroupBox Header="Algorithm">
                         <StackPanel Orientation="Vertical">
-                            <RadioButton IsChecked="{Binding Algo, 
+                            <RadioButton Content="A-Star" IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:Algorithm.AStar}}">
-                                A-Star
-                            </RadioButton>
-                            <RadioButton IsChecked="{Binding Algo, 
+								ConverterParameter={x:Static pf:Algorithm.AStar}}" />
+                            <RadioButton Content="Breadth-First" IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:Algorithm.BreadthFirst}}">
-                                Breadth-First
-                            </RadioButton>
-                            <RadioButton IsChecked="{Binding Algo, 
+								ConverterParameter={x:Static pf:Algorithm.BreadthFirst}}" />
+                            <RadioButton Content="Depth-First" IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:Algorithm.DepthFirst}}">
-                                Depth-First
-                            </RadioButton>
-                            <RadioButton IsChecked="{Binding Algo, 
+								ConverterParameter={x:Static pf:Algorithm.DepthFirst}}" />
+                            <RadioButton Content="Depth-First (Random)" IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked},
-								ConverterParameter={x:Static pf:Algorithm.DepthFirstRandom}}">
-                                Depth-First (Random)
-                            </RadioButton>
-                            <RadioButton IsChecked="{Binding Algo, 
+								ConverterParameter={x:Static pf:Algorithm.DepthFirstRandom}}" />
+                            <RadioButton Content="Hill-Climbing" IsChecked="{Binding Algo, 
+								Converter={StaticResource RadioIsChecked},
+								ConverterParameter={x:Static pf:Algorithm.HillClimbing}}"/>
+                            <RadioButton Content="Best-First" IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:Algorithm.BestFirst}}">
-                                Best-First
-                            </RadioButton>
-                            <RadioButton IsChecked="{Binding Algo, 
+								ConverterParameter={x:Static pf:Algorithm.BestFirst}}" />
+                            <RadioButton Content="Dijkstra" IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:Algorithm.Dijkstra}}">
-                                Dijkstra
-                            </RadioButton>
-                            <RadioButton IsChecked="{Binding Algo, 
+								ConverterParameter={x:Static pf:Algorithm.Dijkstra}}" />
+                            <RadioButton Content="Jump Point Search" IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:Algorithm.JumpPoint}}">
-                                Jump Point Search
-                            </RadioButton>
+								ConverterParameter={x:Static pf:Algorithm.JumpPoint}}" />
                         </StackPanel>
                     </GroupBox>
 
@@ -82,21 +71,15 @@
                     <GroupBox Header="Heuristic Function"
                               IsEnabled="{Binding Algo, Converter={StaticResource HeuristicsEnabledConverter}}">
                         <StackPanel Orientation="Vertical">
-                            <RadioButton IsChecked="{Binding HeuristicFunction, 
+                            <RadioButton Content="Manhattan" IsChecked="{Binding HeuristicFunction, 
 								Converter={StaticResource RadioIsChecked},
-								ConverterParameter={x:Static pf:Heuristic.Manhattan}}">
-                                Manhattan
-                            </RadioButton>
-                            <RadioButton IsChecked="{Binding HeuristicFunction, 
+								ConverterParameter={x:Static pf:Heuristic.Manhattan}}" />
+                            <RadioButton Content="Euclidean" IsChecked="{Binding HeuristicFunction, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:Heuristic.Euclidean}}">
-                                Euclidean
-                            </RadioButton>
-                            <RadioButton IsChecked="{Binding HeuristicFunction, 
+								ConverterParameter={x:Static pf:Heuristic.Euclidean}}" />
+                            <RadioButton Content="Chebyshev" IsChecked="{Binding HeuristicFunction, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:Heuristic.Chebyshev}}">
-                                Chebyshev
-                            </RadioButton>
+								ConverterParameter={x:Static pf:Heuristic.Chebyshev}}" />
                         </StackPanel>
 
                         <!--Fade the groupbox in/out on enable/disable-->

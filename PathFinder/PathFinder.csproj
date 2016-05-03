@@ -79,6 +79,7 @@
     <Compile Include="Finders\DepthFirst.cs" />
     <Compile Include="Finders\Dijkstra.cs" />
     <Compile Include="Finders\DepthFirstRandom.cs" />
+    <Compile Include="Finders\HillClimbing.cs" />
     <Compile Include="Heuristic.cs" />
     <Compile Include="History.cs" />
     <Compile Include="RelayCommand.cs" />

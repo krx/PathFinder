@@ -13,6 +13,7 @@ namespace PathFinder {
         public static AlgoFunc BreadthFirst = Finders.BreadthFirst.Search;
         public static AlgoFunc DepthFirst = Finders.DepthFirst.Search;
         public static AlgoFunc DepthFirstRandom = Finders.DepthFirstRandom.Search;
+        public static AlgoFunc HillClimbing = Finders.HillClimbing.Search;
         public static AlgoFunc BestFirst = Finders.BestFirst.Search;
         public static AlgoFunc Dijkstra = Finders.Dijkstra.Search;
         public static AlgoFunc JumpPoint = (start, end, grid, heuristic, allowed, diagAllowed, hist) => new List<Node>();

@@ -40,7 +40,7 @@ namespace PathFinder {
             ObservableCollection<Node> copy = new ObservableCollection<Node>(Nodes);
             int oldWidth = Width, oldHeight = Height;
             bool startCopied = false, endCopied = false;
-            InitializeGrid((width / (int) Node.Nodesize) + 2, (height / (int) Node.Nodesize) + 2);
+            InitializeGrid((width / (int) Node.Nodesize) + 1, (height / (int) Node.Nodesize) + 1);
 
             //Copy over the previous grid state
             for (int row = 0; row < Math.Min(Height, oldHeight); ++row) {
