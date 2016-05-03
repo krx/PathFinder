@@ -13,7 +13,7 @@ namespace PathFinder {
         Empty, Wall, Open, Closed, Start, End
     }
 
-    class Node : INotifyPropertyChanged, ICloneable {
+    class Node : INotifyPropertyChanged, ICloneable, IComparable {
         public static readonly double Nodesize = 30;
 
         public int X { get; }
@@ -21,14 +21,13 @@ namespace PathFinder {
         public int GScore { get; set; }
         public int HScore { get; set; }
         public int FScore => GScore + HScore;
+        public Node Parent { get; set; }
+        public bool IsWalkable => State != NodeState.Wall;
 
         private NodeState _state;
         public NodeState State {
             get { return _state; }
-            set {
-                _state = value;
-                OnPropertyChanged("State");
-            }
+            set { _state = value; OnPropertyChanged("State"); }
         }
 
         public Node(int x, int y, NodeState state = NodeState.Empty) {
@@ -43,10 +42,22 @@ namespace PathFinder {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public void ClearScores() {
+            GScore = HScore = 0;
+        }
+
         public object Clone() {
             return new Node(X, Y, State);
         }
+
+        public int CompareTo(object o) {
+            return FScore.CompareTo(((Node) o).FScore);
+        }
+
+        public override bool Equals(object other) {
+            Node n = other as Node;
+            if (n != null) return X == n.X && Y == n.Y;
+            return base.Equals(other);
+        }
     }
-
-
 }
