@@ -13,17 +13,17 @@
 
             <GroupBox Header="Grid Controls" DockPanel.Dock="Bottom">
                 <StackPanel Orientation="Vertical">
-                    <Button>Clear Walls</Button>
-                    <Button>Clear Path</Button>
-                    <Button>Generate Maze</Button>
+                    <Button Content="Clear Walls" Command="{Binding ClearWallsCommand}" />
+                    <Button Content="Clear Path" Command="{Binding ClearPathCommand}" />
+                    <Button Content="Generate Maze"/>
                 </StackPanel>
             </GroupBox>
 
             <GroupBox Header="Playback Controls" DockPanel.Dock="Bottom">
                 <StackPanel Orientation="Vertical">
-                    <Button>Start</Button>
-                    <Button>Pause</Button>
-                    <Button>Stop</Button>
+                    <Button Content="Start" />
+                    <Button Content="Pause" />
+                    <Button Content="Stop" />
                 </StackPanel>
             </GroupBox>
 
@@ -112,7 +112,8 @@
                 <DataTemplate DataType="{x:Type pf:Node}">
                     <Rectangle Stroke="#CC000000" StrokeThickness="0.25"
                                Width="{x:Static pf:Node.Nodesize}"
-                               Height="{x:Static pf:Node.Nodesize}">
+                               Height="{x:Static pf:Node.Nodesize}"
+                               Name="nodeRect">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="{Binding Color}" />
                         </Rectangle.Fill>

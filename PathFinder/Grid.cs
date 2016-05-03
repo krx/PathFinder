@@ -36,15 +36,14 @@ namespace PathFinder {
 
         public void ResizeGrid(int width, int height) {
             ObservableCollection<Node> copy = new ObservableCollection<Node>(Nodes);
-            int ow = Width, oh = Height;
+            int oldWidth = Width, oldHeight = Height;
+            bool startCopied = false, endCopied = false;
             InitializeGrid((width / (int) Node.Nodesize) + 2, (height / (int) Node.Nodesize) + 2);
 
-            bool startCopied = false, endCopied = false;
-
             //Copy over the previous grid state
-            for (int row = 0; row < Math.Min(Height, oh); ++row) {
-                for (int col = 0; col < Math.Min(Width, ow); ++col) {
-                    Node n = copy[row * ow + col];
+            for (int row = 0; row < Math.Min(Height, oldHeight); ++row) {
+                for (int col = 0; col < Math.Min(Width, oldWidth); ++col) {
+                    Node n = copy[row * oldWidth + col];
                     if (n.State == NodeState.Start) startCopied = true;
                     if (n.State == NodeState.End) endCopied = true;
                     this[row, col] = n;

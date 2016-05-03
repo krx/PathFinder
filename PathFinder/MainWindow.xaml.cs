@@ -30,11 +30,7 @@ namespace PathFinder {
             DataContext = vm;
 
             SizeChanged += OnResize;
-
-            MouseMove += (sender, args) => {
-                Point p = Mouse.GetPosition(this);
-                vm.OnMouseMoved(p);
-            };
+            MouseMove += (sender, args) => vm.OnMouseMoved(Mouse.GetPosition(this));
             MouseLeftButtonDown += (sender, args) => vm.OnLeftMouseDown();
             MouseLeftButtonUp += (sender, args) => vm.OnLeftMouseUp();
 
