@@ -23,9 +23,9 @@ namespace PathFinder {
         public int CenterX => (int) (CoordX + Nodesize / 2.0);
         public int CenterY => (int) (CoordY + Nodesize / 2.0);
 
-        public int GScore { get; set; }
-        public int HScore { get; set; }
-        public int FScore => GScore + HScore;
+        public double GScore { get; set; }
+        public double HScore { get; set; }
+        public double FScore => GScore + HScore;
         public Node Parent { get; set; }
         public bool IsWalkable => State != NodeState.Wall;
 

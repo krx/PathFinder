@@ -73,6 +73,7 @@
     </ApplicationDefinition>
     <Compile Include="Algorithm.cs" />
     <Compile Include="Finders\BreadthFirst.cs" />
+    <Compile Include="Finders\Dijkstra.cs" />
     <Compile Include="Heuristic.cs" />
     <Compile Include="History.cs" />
     <Compile Include="RelayCommand.cs" />
