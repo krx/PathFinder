@@ -16,29 +16,11 @@ namespace PathFinder {
     class Node : INotifyPropertyChanged, ICloneable {
         public static readonly double Nodesize = 30;
 
-        private static Dictionary<NodeState, Color> cmap = new Dictionary<NodeState, Color>() {
-            {NodeState.Empty, Colors.White },
-            {NodeState.Wall, Colors.Gray },
-            {NodeState.Open, Colors.LightBlue },
-            {NodeState.Closed, Colors.LightGreen },
-            {NodeState.Start, Color.FromRgb(0, 255, 0) },
-            {NodeState.End, Colors.Red }
-        };
-
         public int X { get; }
         public int Y { get; }
         public int GScore { get; set; }
         public int HScore { get; set; }
         public int FScore => GScore + HScore;
-
-        private Color _col;
-        public Color Color {
-            get { return _col; }
-            set {
-                _col = value;
-                OnPropertyChanged("Color");
-            }
-        }
 
         private NodeState _state;
         public NodeState State {
@@ -46,7 +28,6 @@ namespace PathFinder {
             set {
                 _state = value;
                 OnPropertyChanged("State");
-                Color = cmap[_state];
             }
         }
 
@@ -61,7 +42,6 @@ namespace PathFinder {
         protected virtual void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
 
         public object Clone() {
             return new Node(X, Y, State);

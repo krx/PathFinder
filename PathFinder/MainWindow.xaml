@@ -111,13 +111,54 @@
                 <!--Template for Node-->
                 <DataTemplate DataType="{x:Type pf:Node}">
                     <Rectangle Stroke="#CC000000" StrokeThickness="0.25"
+                               RenderTransformOrigin="0.5,0.5"
                                Width="{x:Static pf:Node.Nodesize}"
                                Height="{x:Static pf:Node.Nodesize}"
-                               Name="nodeRect">
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{Binding Color}" />
-                        </Rectangle.Fill>
+                               Name="nodeRect" Fill="White">
+                        <Rectangle.RenderTransform>
+                            <ScaleTransform ScaleX="1" ScaleY="1" />
+                        </Rectangle.RenderTransform>
                     </Rectangle>
+
+                    <DataTemplate.Triggers>
+                        <!--Node triggers to colorize based on current state-->
+                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Start}">
+                            <Setter TargetName="nodeRect" Property="Fill" Value="#00FF00"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.End}">
+                            <Setter TargetName="nodeRect" Property="Fill" Value="Red"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Open}">
+                            <Setter TargetName="nodeRect" Property="Fill" Value="Orange"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Closed}">
+                            <Setter TargetName="nodeRect" Property="Fill" Value="Cyan"></Setter>
+                        </DataTrigger>
+
+                        <!--The wall trigger has a nice transition animation-->
+                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Wall}">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="nodeRect" Storyboard.TargetProperty="Fill.Color" To="Gray" Duration="0:0:0.1"/>
+                                        <DoubleAnimation Storyboard.TargetName="nodeRect" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.2" Duration="0:0:0.1" AutoReverse="True" />
+                                        <DoubleAnimation Storyboard.TargetName="nodeRect" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.2" Duration="0:0:0.1" AutoReverse="True" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+
+                            <DataTrigger.ExitActions>
+                                <!--The only time you ever exit a wall state is to go to an empty state, so make that switch here-->
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="nodeRect" Storyboard.TargetProperty="Fill.Color" To="White" Duration="0:0:0.1"/>
+                                        <DoubleAnimation Storyboard.TargetName="nodeRect" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.2" Duration="0:0:0.1" AutoReverse="True" />
+                                        <DoubleAnimation Storyboard.TargetName="nodeRect" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.2" Duration="0:0:0.1" AutoReverse="True" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
                 </DataTemplate>
             </ItemsControl.Resources>
 
@@ -138,6 +179,12 @@
                 <Style TargetType="ContentPresenter">
                     <Setter Property="Canvas.Left" Value="{Binding X, Converter={StaticResource NodeIdxToCoord}}" />
                     <Setter Property="Canvas.Top" Value="{Binding Y, Converter={StaticResource NodeIdxToCoord}}" />
+
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Panel.ZIndex" Value="99"></Setter>
+                        </Trigger>
+                    </Style.Triggers>
                 </Style>
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
