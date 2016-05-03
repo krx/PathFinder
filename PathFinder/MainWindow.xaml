@@ -16,7 +16,6 @@
                     <Button>Clear Walls</Button>
                     <Button>Clear Path</Button>
                     <Button>Generate Maze</Button>
-                    <Button Click="OnResize">Regen Grid</Button>
                 </StackPanel>
             </GroupBox>
 
@@ -111,7 +110,7 @@
 
                 <!--Template for Node-->
                 <DataTemplate DataType="{x:Type pf:Node}">
-                    <Rectangle Stroke="#C8C8C8" StrokeThickness="1"
+                    <Rectangle Stroke="#CC000000" StrokeThickness="0.25"
                                Width="{x:Static pf:Node.Nodesize}"
                                Height="{x:Static pf:Node.Nodesize}">
                         <Rectangle.Fill>

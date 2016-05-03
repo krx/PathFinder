@@ -25,9 +25,11 @@ namespace PathFinder {
             {NodeState.End, Colors.Red }
         };
 
-        public int X { get; private set; }
-
-        public int Y { get; private set; }
+        public int X { get; }
+        public int Y { get; }
+        public int GScore { get; set; }
+        public int HScore { get; set; }
+        public int FScore => GScore + HScore;
 
         private Color _col;
         public Color Color {

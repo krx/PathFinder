@@ -22,7 +22,7 @@ namespace PathFinder {
     public partial class MainWindow {
         private MainViewModel vm;
         private bool mouseDown = false;
-        Timer resizeTimer = new Timer(100) { Enabled = false };
+        private Timer resizeTimer = new Timer(100) { Enabled = false };
 
         public MainWindow() {
             InitializeComponent();
@@ -31,14 +31,14 @@ namespace PathFinder {
 
             SizeChanged += OnResize;
 
-            resizeTimer.Elapsed += ResizingDone;
-        }
+            MouseMove += (sender, args) => {
+                Point p = Mouse.GetPosition(this);
+                vm.OnMouseMoved(p);
+            };
+            MouseLeftButtonDown += (sender, args) => vm.OnLeftMouseDown();
+            MouseLeftButtonUp += (sender, args) => vm.OnLeftMouseUp();
 
-        private void MDownListener(object sender, RoutedEventArgs e) {
-            Console.WriteLine("DOWN");
-        }
-        private void MUpListener(object sender, RoutedEventArgs e) {
-            Console.WriteLine("UP");
+            resizeTimer.Elapsed += ResizingDone;
         }
 
         void ResizingDone(object sender, ElapsedEventArgs e) {
