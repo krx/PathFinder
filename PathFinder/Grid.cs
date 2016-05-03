@@ -8,16 +8,19 @@ using System.Windows;
 
 namespace PathFinder {
     class Grid {
-        private ObservableCollection<Node> _nodes;
-        public ObservableCollection<Node> Nodes => _nodes ?? (_nodes = new ObservableCollection<Node>());
+        public ObservableCollection<Node> Nodes { get; }
 
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public Node this[int row, int col] => Nodes[row * Width + col];
+        public Node this[int row, int col] {
+            get { return Nodes[row * Width + col]; }
+            private set { Nodes[row * Width + col] = value; }
+        }
 
         public Grid() {
-            InitializeGrid(10, 10);
+            Nodes = new ObservableCollection<Node>();
+            InitializeGrid(5, 5);
         }
 
         public void InitializeGrid(int width, int height) {
@@ -27,6 +30,17 @@ namespace PathFinder {
             for (int y = 0; y < Height; ++y) {
                 for (int x = 0; x < Width; ++x) {
                     Nodes.Add(new Node(x, y));
+                }
+            }
+        }
+
+        public void ResizeGrid(int width, int height) {
+            ObservableCollection<Node> copy = new ObservableCollection<Node>(Nodes);
+            int ow = Width, oh = Height;
+            InitializeGrid((width / (int) Node.Nodesize) + 2, (height / (int) Node.Nodesize) + 2);
+            for (int row = 0; row < Math.Min(Height, oh); ++row) {
+                for (int col = 0; col < Math.Min(Width, ow); ++col) {
+                    this[row, col] = copy[row * ow + col];
                 }
             }
         }

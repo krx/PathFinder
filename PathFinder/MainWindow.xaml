@@ -1,7 +1,6 @@
 ﻿<Window x:Class="PathFinder.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:wintk="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
 		xmlns:pf="clr-namespace:PathFinder"
         Title="PathFinder" Height="600" Width="800"
         x:Name="view">
@@ -10,19 +9,20 @@
         <pf:NodeIdxToCoord x:Key="NodeIdxToCoord"></pf:NodeIdxToCoord>
     </Window.Resources>
     <DockPanel>
-        <DockPanel DockPanel.Dock="Right">
+        <DockPanel DockPanel.Dock="Right" Background="White" Panel.ZIndex="99">
 
             <GroupBox Header="Grid Controls" DockPanel.Dock="Bottom">
                 <StackPanel Orientation="Vertical">
                     <Button>Clear Walls</Button>
                     <Button>Clear Path</Button>
                     <Button>Generate Maze</Button>
+                    <Button Click="OnResize">Regen Grid</Button>
                 </StackPanel>
             </GroupBox>
 
             <GroupBox Header="Playback Controls" DockPanel.Dock="Bottom">
                 <StackPanel Orientation="Vertical">
-                    <Button Click="Button_Click">Start</Button>
+                    <Button>Start</Button>
                     <Button>Pause</Button>
                     <Button>Stop</Button>
                 </StackPanel>
@@ -92,8 +92,9 @@
 
                     <GroupBox Header="Optional Settings">
                         <StackPanel Orientation="Vertical">
-                            <CheckBox>Diagonals Allowed</CheckBox>
-                            <CheckBox>Corner Crossing Allowed</CheckBox>
+                            <CheckBox Name="DiagBox">Diagonals Allowed</CheckBox>
+                            <CheckBox IsEnabled="{Binding ElementName=DiagBox, Path=IsChecked}">
+                                Corner Crossing Allowed</CheckBox>
                         </StackPanel>
                     </GroupBox>
                 </StackPanel>
@@ -101,7 +102,7 @@
         </DockPanel>
 
         <!-- Canvas to display all dynamic elements -->
-        <ItemsControl>
+        <ItemsControl  Name="ItemsCanvas" Padding="0">
             <ItemsControl.Resources>
                 <!-- Combine all lists into one -->
                 <CompositeCollection x:Key="Col">
@@ -127,8 +128,8 @@
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas IsItemsHost="True" Background="White"
-                            Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualWidth}"
-                            Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualHeight}"
+                            Width="{Binding ElementName=ItemsCanvas, Path=ActualWidth}"
+                            Height="{Binding ElementName=ItemsCanvas, Path=ActualHeight}"
                             VerticalAlignment="Top" HorizontalAlignment="Left" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>

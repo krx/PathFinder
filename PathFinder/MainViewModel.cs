@@ -11,8 +11,7 @@ using System.Windows.Data;
 
 namespace PathFinder {
     class MainViewModel : INotifyPropertyChanged {
-        private Grid _grid;
-        public Grid Grid { get { return _grid; } }
+        public Grid Grid { get; }
 
         private AlgorithmType _algorithm;
         public AlgorithmType Algorithm { get { return _algorithm; } set { _algorithm = value; OnPropertyChanged("Algorithm"); } }
@@ -23,9 +22,10 @@ namespace PathFinder {
         public int NodeSize = 10;
 
         public MainViewModel() {
-            _grid = new Grid();
-            Grid[0, 0].State = NodeState.Start;
-            Grid[0, 1].State = NodeState.End;
+            Grid = new Grid {
+                [0, 0] = { State = NodeState.Start },
+                [0, 1] = { State = NodeState.End }
+            };
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -34,9 +34,6 @@ namespace PathFinder {
         protected virtual void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-
-
     }
 
     public class RadioIsCheckedConverter : IValueConverter {

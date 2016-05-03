@@ -13,10 +13,10 @@ namespace PathFinder {
         Empty, Wall, Open, Closed, Start, End
     }
 
-    class Node : INotifyPropertyChanged {
-        public static readonly double Nodesize = 20;
+    class Node : INotifyPropertyChanged, ICloneable {
+        public static readonly double Nodesize = 30;
 
-        private Dictionary<NodeState, Color> cmap = new Dictionary<NodeState, Color>() {
+        private static Dictionary<NodeState, Color> cmap = new Dictionary<NodeState, Color>() {
             {NodeState.Empty, Colors.White },
             {NodeState.Wall, Colors.Gray },
             {NodeState.Open, Colors.LightBlue },
@@ -25,24 +25,9 @@ namespace PathFinder {
             {NodeState.End, Colors.Red }
         };
 
-        private int _x;
-        public int X {
-            get { return _x; }
-            set {
-                _x = value;
-                OnPropertyChanged("X");
-            }
-        }
+        public int X { get; private set; }
 
-
-        private int _y;
-        public int Y {
-            get { return _y; }
-            set {
-                _y = value;
-                OnPropertyChanged("Y");
-            }
-        }
+        public int Y { get; private set; }
 
         private Color _col;
         public Color Color {
@@ -63,10 +48,10 @@ namespace PathFinder {
             }
         }
 
-        public Node(int x, int y) {
+        public Node(int x, int y, NodeState state = NodeState.Empty) {
             X = x;
             Y = y;
-            State = NodeState.Empty;
+            State = state;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -76,6 +61,9 @@ namespace PathFinder {
         }
 
 
+        public object Clone() {
+            return new Node(X, Y, State);
+        }
     }
 
 
