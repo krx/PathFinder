@@ -32,9 +32,9 @@ namespace PathFinder.Finders {
                                 open.Add(neighbor);
                                 if (neighbor.State != NodeState.End) hist.Push(neighbor, NodeState.Open);
                             }
-                            open.Sort();
                         }
                     });
+                open.Sort();
             }
             return null;
         }
