@@ -173,7 +173,7 @@ namespace PathFinder {
         }
     }
 
-    public class RadioIsCheckedConverter : IValueConverter {
+    class RadioIsCheckedConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
             return parameter.Equals(value);
         }
@@ -186,6 +186,16 @@ namespace PathFinder {
     class NodeIdxToCoord : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
             return (int) value * (int) Node.Nodesize;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+            throw new NotImplementedException();
+        }
+    }
+
+    class HeuristicsEnabledConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+            return new List<AlgoFunc> { Algorithm.AStar, Algorithm.BestFirst, Algorithm.HillClimbing, Algorithm.JumpPoint }.Contains(value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {

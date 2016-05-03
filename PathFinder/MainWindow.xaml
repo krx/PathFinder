@@ -7,6 +7,7 @@
     <Window.Resources>
         <pf:RadioIsCheckedConverter x:Key="RadioIsChecked"></pf:RadioIsCheckedConverter>
         <pf:NodeIdxToCoord x:Key="NodeIdxToCoord"></pf:NodeIdxToCoord>
+        <pf:HeuristicsEnabledConverter x:Key="HeuristicsEnabledConverter"></pf:HeuristicsEnabledConverter>
     </Window.Resources>
     <DockPanel>
         <DockPanel DockPanel.Dock="Right" Background="White" Panel.ZIndex="99">
@@ -69,7 +70,18 @@
                         </StackPanel>
                     </GroupBox>
 
-                    <GroupBox Header="Heuristic Function">
+                    <GroupBox Header="Optional Settings">
+                        <StackPanel Orientation="Vertical">
+                            <CheckBox Content="Diagonals Allowed"  Name="DiagBox" 
+                                      IsChecked="{Binding DiagonalsAllowed}"/>
+                            <CheckBox Content="Corner Crossing Allowed" 
+                                      IsEnabled="{Binding ElementName=DiagBox, Path=IsChecked}"
+                                      IsChecked="{Binding CornerCutAllowed}"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Heuristic Function"
+                              IsEnabled="{Binding Algo, Converter={StaticResource HeuristicsEnabledConverter}}">
                         <StackPanel Orientation="Vertical">
                             <RadioButton IsChecked="{Binding HeuristicFunction, 
 								Converter={StaticResource RadioIsChecked},
@@ -87,16 +99,30 @@
                                 Chebyshev
                             </RadioButton>
                         </StackPanel>
-                    </GroupBox>
 
-                    <GroupBox Header="Optional Settings">
-                        <StackPanel Orientation="Vertical">
-                            <CheckBox Content="Diagonals Allowed"  Name="DiagBox" 
-                                      IsChecked="{Binding DiagonalsAllowed}"/>
-                            <CheckBox Content="Corner Crossing Allowed" 
-                                      IsEnabled="{Binding ElementName=DiagBox, Path=IsChecked}"
-                                      IsChecked="{Binding CornerCutAllowed}"/>
-                        </StackPanel>
+                        <!--Fade the groupbox in/out on enable/disable-->
+                        <GroupBox.Style>
+                            <Style TargetType="GroupBox">
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.EnterActions>
+                                        <Trigger.ExitActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.ExitActions>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </GroupBox.Style>
                     </GroupBox>
                 </StackPanel>
             </GroupBox>
