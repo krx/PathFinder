@@ -11,8 +11,8 @@ namespace PathFinder {
     class Algorithm {
         public static AlgoFunc AStar = Finders.AStar.Search;
         public static AlgoFunc BreadthFirst = Finders.BreadthFirst.Search;
-        public static AlgoFunc DepthFirst = (start, end, grid, heuristic, allowed, diagAllowed, hist) => new List<Node>();
-        public static AlgoFunc HillClimbing = (start, end, grid, heuristic, allowed, diagAllowed, hist) => new List<Node>();
+        public static AlgoFunc DepthFirst = Finders.DepthFirst.Search;
+        public static AlgoFunc DepthFirstRandom = Finders.DepthFirstRandom.Search;
         public static AlgoFunc BestFirst = Finders.BestFirst.Search;
         public static AlgoFunc Dijkstra = Finders.Dijkstra.Search;
         public static AlgoFunc JumpPoint = (start, end, grid, heuristic, allowed, diagAllowed, hist) => new List<Node>();

@@ -48,8 +48,8 @@
                             </RadioButton>
                             <RadioButton IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked},
-								ConverterParameter={x:Static pf:Algorithm.HillClimbing}}">
-                                Hill Climbing
+								ConverterParameter={x:Static pf:Algorithm.DepthFirstRandom}}">
+                                Depth-First (Random)
                             </RadioButton>
                             <RadioButton IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
@@ -128,7 +128,10 @@
         </DockPanel>
 
         <!-- Canvas to display all dynamic elements -->
-        <ItemsControl  Name="ItemsCanvas" Padding="0">
+        <ItemsControl  Name="ItemsCanvas" Padding="0"
+                       ScrollViewer.CanContentScroll="True"
+                       VirtualizingStackPanel.IsVirtualizing="True"
+                       VirtualizingStackPanel.VirtualizationMode="Recycling">
             <ItemsControl.Resources>
                 <!-- Combine all lists into one -->
                 <CompositeCollection x:Key="Col">
@@ -144,7 +147,10 @@
                                Height="{x:Static pf:Node.Nodesize}"
                                Name="nodeRect" Fill="White">
                         <Rectangle.RenderTransform>
-                            <ScaleTransform ScaleX="1" ScaleY="1" />
+                            <TransformGroup>
+                                <ScaleTransform x:Name="rectScale" ScaleX="1" ScaleY="1" />
+                                <TranslateTransform X="{Binding CoordX}" Y="{Binding CoordY}"></TranslateTransform>
+                            </TransformGroup>
                         </Rectangle.RenderTransform>
                     </Rectangle>
 
@@ -171,11 +177,11 @@
                                         <ColorAnimation Storyboard.TargetName="nodeRect" 
                                                         Storyboard.TargetProperty="Fill.Color"
                                                         To="Gray" Duration="0:0:0.1"/>
-                                        <DoubleAnimation Storyboard.TargetName="nodeRect" 
-                                                         Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                        <DoubleAnimation Storyboard.TargetName="rectScale" 
+                                                         Storyboard.TargetProperty="ScaleX"
                                                          To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                        <DoubleAnimation Storyboard.TargetName="nodeRect"
-                                                         Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                        <DoubleAnimation Storyboard.TargetName="rectScale"
+                                                         Storyboard.TargetProperty="ScaleY"
                                                          To="1.2" Duration="0:0:0.1" AutoReverse="True" />
                                     </Storyboard>
                                 </BeginStoryboard>
@@ -189,11 +195,11 @@
                                         <ColorAnimation Storyboard.TargetName="nodeRect" 
                                                         Storyboard.TargetProperty="Fill.Color" 
                                                         To="White" Duration="0:0:0.1"/>
-                                        <DoubleAnimation Storyboard.TargetName="nodeRect" 
-                                                         Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                        <DoubleAnimation Storyboard.TargetName="rectScale" 
+                                                         Storyboard.TargetProperty="ScaleX"
                                                          To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                        <DoubleAnimation Storyboard.TargetName="nodeRect"
-                                                         Storyboard.TargetProperty="RenderTransform.ScaleY" 
+                                        <DoubleAnimation Storyboard.TargetName="rectScale"
+                                                         Storyboard.TargetProperty="ScaleY"
                                                          To="1.2" Duration="0:0:0.1" AutoReverse="True" />
                                     </Storyboard>
                                 </BeginStoryboard>
@@ -224,8 +230,8 @@
 
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
-                    <Setter Property="Canvas.Left" Value="{Binding CoordX}" />
-                    <Setter Property="Canvas.Top" Value="{Binding CoordY}" />
+                    <!--                    <Setter Property="Canvas.Left" Value="{Binding CoordX}" />-->
+                    <!--                    <Setter Property="Canvas.Top" Value="{Binding CoordY}" />-->
 
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">

@@ -218,7 +218,7 @@ namespace PathFinder {
 
     class HeuristicsEnabledConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-            return new List<AlgoFunc> { Algorithm.AStar, Algorithm.BestFirst, Algorithm.HillClimbing, Algorithm.JumpPoint }.Contains(value);
+            return new List<AlgoFunc> { Algorithm.AStar, Algorithm.BestFirst, Algorithm.DepthFirstRandom, Algorithm.JumpPoint }.Contains(value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
