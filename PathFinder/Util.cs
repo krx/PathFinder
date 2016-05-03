@@ -14,7 +14,7 @@ namespace PathFinder {
             return IsValid(x, y, grid) && grid[y, x].IsWalkable;
         }
 
-        public static List<Node> backtrace(Node node) {
+        public static List<Node> Backtrace(Node node) {
             List<Node> path = new List<Node> { node };
             while (node.Parent != null) {
                 path.Add(node.Parent);

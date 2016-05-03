@@ -21,7 +21,7 @@
 
             <GroupBox Header="Playback Controls" DockPanel.Dock="Bottom">
                 <StackPanel Orientation="Vertical">
-                    <Button Content="Start" />
+                    <Button Content="Start" Command="{Binding StartCommand}" />
                     <Button Content="Pause" />
                     <Button Content="Stop" />
                 </StackPanel>

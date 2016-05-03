@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -64,15 +65,26 @@ namespace PathFinder {
 
             Algo = Algorithm.AStar;
             HeuristicFunction = Heuristic.Manhattan;
+            DiagonalsAllowed = true;
+            CornerCutAllowed = true;
 
             ClearWallsCommand = new RelayCommand(o => ClearWalls());
             ClearPathCommand = new RelayCommand(o => ClearPath());
+            StartCommand = new RelayCommand(o => StartSearch());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void StartSearch() {
+            ClearPath();
+            Node start = Grid.Nodes.First(n => n.State == NodeState.Start);
+            Node end = Grid.Nodes.First(n => n.State == NodeState.End);
+
+            new Thread(() => Algo(start, end, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed)).Start();
         }
 
         public void ClearWalls() {
@@ -89,14 +101,10 @@ namespace PathFinder {
 
         private void SetStart() {
             if (Util.IsValid(mouseXIdx, mouseYIdx, Grid)) {
+                ClearPath();
                 Node n = Grid[mouseYIdx, mouseXIdx];
                 if (n.State != NodeState.End && n.State != NodeState.Wall) {
-                    foreach (Node node in Grid.Nodes) {
-                        if (node.State == NodeState.Start) {
-                            node.State = NodeState.Empty;
-                            break;
-                        }
-                    }
+                    Grid.Nodes.First(node => node.State == NodeState.Start).State = NodeState.Empty;
                     n.State = NodeState.Start;
                 }
             }
@@ -104,14 +112,10 @@ namespace PathFinder {
 
         private void SetEnd() {
             if (Util.IsValid(mouseXIdx, mouseYIdx, Grid)) {
+                ClearPath();
                 Node n = Grid[mouseYIdx, mouseXIdx];
                 if (n.State != NodeState.Start && n.State != NodeState.Wall) {
-                    foreach (Node node in Grid.Nodes) {
-                        if (node.State == NodeState.End) {
-                            node.State = NodeState.Empty;
-                            break;
-                        }
-                    }
+                    Grid.Nodes.First(node => node.State == NodeState.End).State = NodeState.Empty;
                     n.State = NodeState.End;
                 }
             }
@@ -120,7 +124,7 @@ namespace PathFinder {
         private void PaintState() {
             if (Util.IsValid(mouseXIdx, mouseYIdx, Grid)) {
                 Node n = Grid[mouseYIdx, mouseXIdx];
-                if (n.State != NodeState.Start && n.State != NodeState.End && n.State != dropType) {
+                if (n.State != NodeState.Start && n.State != NodeState.End) {
                     n.State = dropType;
                 }
             }

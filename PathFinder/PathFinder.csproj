@@ -72,6 +72,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Algorithm.cs" />
+    <Compile Include="Finders\BreadthFirst.cs" />
     <Compile Include="Heuristic.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Util.cs" />
@@ -119,9 +120,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Finders\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
       <Visible>False</Visible>

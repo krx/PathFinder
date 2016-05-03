@@ -10,7 +10,7 @@ namespace PathFinder {
 
     class Algorithm {
         public static AlgoFunc AStar = (start, end, grid, heuristic, allowed, diagAllowed) => new List<Node>();
-        public static AlgoFunc BreadthFirst = (start, end, grid, heuristic, allowed, diagAllowed) => new List<Node>();
+        public static AlgoFunc BreadthFirst = Finders.BreadthFirst.Search;
         public static AlgoFunc DepthFirst = (start, end, grid, heuristic, allowed, diagAllowed) => new List<Node>();
         public static AlgoFunc HillClimbing = (start, end, grid, heuristic, allowed, diagAllowed) => new List<Node>();
         public static AlgoFunc BestFirst = (start, end, grid, heuristic, allowed, diagAllowed) => new List<Node>();
