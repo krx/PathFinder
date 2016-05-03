@@ -9,7 +9,7 @@ namespace PathFinder {
     delegate List<Node> AlgoFunc(Node start, Node end, Grid grid, HeuristicFunc heuristic, bool diagAllowed, bool crossDiagAllowed, History hist);
 
     class Algorithm {
-        public static AlgoFunc AStar = (start, end, grid, heuristic, allowed, diagAllowed, hist) => new List<Node>();
+        public static AlgoFunc AStar = Finders.AStar.Search;
         public static AlgoFunc BreadthFirst = Finders.BreadthFirst.Search;
         public static AlgoFunc DepthFirst = (start, end, grid, heuristic, allowed, diagAllowed, hist) => new List<Node>();
         public static AlgoFunc HillClimbing = (start, end, grid, heuristic, allowed, diagAllowed, hist) => new List<Node>();
