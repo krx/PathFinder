@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -72,6 +73,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Algorithm.cs" />
+    <Compile Include="Finders\AStar.cs" />
+    <Compile Include="Finders\BestFirst.cs" />
     <Compile Include="Finders\BreadthFirst.cs" />
     <Compile Include="Finders\Dijkstra.cs" />
     <Compile Include="Heuristic.cs" />
