@@ -15,19 +15,39 @@ using System.Windows.Media.Animation;
 
 namespace PathFinder {
     class MainViewModel : INotifyPropertyChanged {
-        public Grid Grid { get; }
-
-        // Binded properties
-        private AlgorithmType _algorithm;
-        public AlgorithmType Algorithm { get { return _algorithm; } set { _algorithm = value; OnPropertyChanged("Algorithm"); } }
-
-        private HeuristicFunc _heuristic;
-        public HeuristicFunc HeuristicFunction { get { return _heuristic; } set { _heuristic = value; OnPropertyChanged("HeuristicFunction"); } }
-
         // Private variables
+        private bool _diagonalsAllowed;
+        private bool _cornerCutAllowed;
+        private AlgorithmType _algorithm;
+        private HeuristicFunc _heuristic;
         private int mouseXIdx;
         private int mouseYIdx;
         private NodeState dropType = NodeState.Empty;
+
+
+        public Grid Grid { get; }
+
+        // Binded properties
+        public AlgorithmType Algorithm {
+            get { return _algorithm; }
+            set { _algorithm = value; OnPropertyChanged("Algorithm"); }
+        }
+
+        public HeuristicFunc HeuristicFunction {
+            get { return _heuristic; }
+            set { _heuristic = value; OnPropertyChanged("HeuristicFunction"); }
+        }
+
+        public bool DiagonalsAllowed {
+            get { return _diagonalsAllowed; }
+            set { _diagonalsAllowed = value; OnPropertyChanged("DiagonalsAllowed"); }
+        }
+
+        public bool CornerCutAllowed {
+            get { return _cornerCutAllowed; }
+            set { _cornerCutAllowed = value; OnPropertyChanged("CornerCutAllowed"); }
+        }
+
 
         // Commands
         public ICommand ClearWallsCommand { get; }
