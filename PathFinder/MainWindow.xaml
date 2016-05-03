@@ -31,39 +31,39 @@
                 <StackPanel Orientation="Vertical">
                     <GroupBox Header="Algorithm">
                         <StackPanel Orientation="Vertical">
-                            <RadioButton IsChecked="{Binding Algorithm, 
+                            <RadioButton IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:AlgorithmType.AStar}}">
+								ConverterParameter={x:Static pf:Algorithm.AStar}}">
                                 A-Star
                             </RadioButton>
-                            <RadioButton IsChecked="{Binding Algorithm, 
+                            <RadioButton IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:AlgorithmType.BreadthFirst}}">
+								ConverterParameter={x:Static pf:Algorithm.BreadthFirst}}">
                                 Breadth-First
                             </RadioButton>
-                            <RadioButton IsChecked="{Binding Algorithm, 
+                            <RadioButton IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:AlgorithmType.DepthFirst}}">
+								ConverterParameter={x:Static pf:Algorithm.DepthFirst}}">
                                 Depth-First
                             </RadioButton>
-                            <RadioButton IsChecked="{Binding Algorithm, 
+                            <RadioButton IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked},
-								ConverterParameter={x:Static pf:AlgorithmType.HillClimbing}}">
+								ConverterParameter={x:Static pf:Algorithm.HillClimbing}}">
                                 Hill Climbing
                             </RadioButton>
-                            <RadioButton IsChecked="{Binding Algorithm, 
+                            <RadioButton IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:AlgorithmType.BestFirst}}">
+								ConverterParameter={x:Static pf:Algorithm.BestFirst}}">
                                 Best-First
                             </RadioButton>
-                            <RadioButton IsChecked="{Binding Algorithm, 
+                            <RadioButton IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:AlgorithmType.Dijkstra}}">
+								ConverterParameter={x:Static pf:Algorithm.Dijkstra}}">
                                 Dijkstra
                             </RadioButton>
-                            <RadioButton IsChecked="{Binding Algorithm, 
+                            <RadioButton IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:AlgorithmType.JumpPoint}}">
+								ConverterParameter={x:Static pf:Algorithm.JumpPoint}}">
                                 Jump Point Search
                             </RadioButton>
                         </StackPanel>

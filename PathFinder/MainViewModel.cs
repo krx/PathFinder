@@ -18,19 +18,18 @@ namespace PathFinder {
         // Private variables
         private bool _diagonalsAllowed;
         private bool _cornerCutAllowed;
-        private AlgorithmType _algorithm;
+        private AlgoFunc _algorithm;
         private HeuristicFunc _heuristic;
         private int mouseXIdx;
         private int mouseYIdx;
         private NodeState dropType = NodeState.Empty;
 
-
         public Grid Grid { get; }
 
         // Binded properties
-        public AlgorithmType Algorithm {
+        public AlgoFunc Algo {
             get { return _algorithm; }
-            set { _algorithm = value; OnPropertyChanged("Algorithm"); }
+            set { _algorithm = value; OnPropertyChanged("Algo"); }
         }
 
         public HeuristicFunc HeuristicFunction {
@@ -63,7 +62,7 @@ namespace PathFinder {
                 [0, 1] = { State = NodeState.End }
             };
 
-            Algorithm = AlgorithmType.AStar;
+            Algo = Algorithm.AStar;
             HeuristicFunction = Heuristic.Manhattan;
 
             ClearWallsCommand = new RelayCommand(o => ClearWalls());
@@ -188,15 +187,5 @@ namespace PathFinder {
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
             throw new NotImplementedException();
         }
-    }
-
-    public enum AlgorithmType {
-        AStar,
-        BreadthFirst,
-        DepthFirst,
-        HillClimbing,
-        BestFirst,
-        Dijkstra,
-        JumpPoint
     }
 }
