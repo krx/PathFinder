@@ -13,6 +13,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 
 namespace PathFinder {
     class MainViewModel : INotifyPropertyChanged {
@@ -24,7 +25,14 @@ namespace PathFinder {
         private int mouseXIdx;
         private int mouseYIdx;
         private NodeState dropType = NodeState.Empty;
+
+        // Search playback
+        enum PlaybackState {
+            Play, Pause, Stop
+        }
         private History hist;
+        PlaybackState playState = PlaybackState.Stop;
+
 
         public Grid Grid { get; }
 
@@ -70,9 +78,31 @@ namespace PathFinder {
             DiagonalsAllowed = true;
             CornerCutAllowed = true;
 
-            ClearWallsCommand = new RelayCommand(o => ClearWalls());
-            ClearPathCommand = new RelayCommand(o => ClearPath());
+            ClearWallsCommand = new RelayCommand(o => Grid.ClearWalls());
+            ClearPathCommand = new RelayCommand(o => Grid.ClearPath());
             StartCommand = new RelayCommand(o => StartSearch());
+            //            PauseCommand = new RelayCommand(o => playState = PlaybackState.Pause, o => playState == PlaybackState.Play);
+            //            StopCommand = new RelayCommand(o => playState = PlaybackState.Stop, o => playState == PlaybackState.Pause);
+
+            // Start playback thread
+            //            new Thread(() => {
+            //                while (true) {
+            //                    switch (playState) {
+            //                        case PlaybackState.Play:
+            //                            if (!hist.Step()) playState = PlaybackState.Pause;
+            //                            break;
+            //                        case PlaybackState.Pause:
+            //                            Thread.Yield();
+            //                            break;
+            //                        case PlaybackState.Stop:
+            //                            hist.Reset();
+            //                            break;
+            //                        default:
+            //                            throw new ArgumentOutOfRangeException();
+            //                    }
+            //                    Thread.Sleep(4);
+            //                }
+            //            }).Start();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -82,34 +112,28 @@ namespace PathFinder {
         }
 
         public void StartSearch() {
-            ClearPath();
+            //            if (playState == PlaybackState.Stop) {
             hist.Clear();
             Node start = Grid.Nodes.First(n => n.State == NodeState.Start);
             Node end = Grid.Nodes.First(n => n.State == NodeState.End);
 
             new Thread(() => {
-                Algo(start, end, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed, hist);
+                List<Node> path = Algo(start, end, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed, hist);
+                playState = PlaybackState.Play;
                 while (hist.Step()) {
                     Thread.Sleep(4);
                 }
+                if (path != null) {
+                    Application.Current.Dispatcher.Invoke(() => Grid.GenPath(path));
+                }
             }).Start();
+            //            }
         }
 
-        public void ClearWalls() {
-            Grid.Nodes.ToList()
-                .Where(n => n.State != NodeState.Start && n.State != NodeState.End).ToList()
-                .ForEach(n => n.State = NodeState.Empty);
-        }
-
-        public void ClearPath() {
-            Grid.Nodes.ToList()
-                .Where(n => n.State == NodeState.Open || n.State == NodeState.Closed).ToList()
-                .ForEach(n => n.State = NodeState.Empty);
-        }
 
         private void SetStart() {
             if (Util.IsValid(mouseXIdx, mouseYIdx, Grid)) {
-                ClearPath();
+                //                Grid.ClearPath();
                 Node n = Grid[mouseYIdx, mouseXIdx];
                 if (n.State != NodeState.End && n.State != NodeState.Wall) {
                     Grid.Nodes.First(node => node.State == NodeState.Start).State = NodeState.Empty;
@@ -120,7 +144,7 @@ namespace PathFinder {
 
         private void SetEnd() {
             if (Util.IsValid(mouseXIdx, mouseYIdx, Grid)) {
-                ClearPath();
+                //                Grid.ClearPath();
                 Node n = Grid[mouseYIdx, mouseXIdx];
                 if (n.State != NodeState.Start && n.State != NodeState.Wall) {
                     Grid.Nodes.First(node => node.State == NodeState.End).State = NodeState.Empty;
@@ -173,6 +197,7 @@ namespace PathFinder {
                         dropType = Grid[mouseYIdx, mouseXIdx].State;
                         break;
                 }
+                Grid.ClearPath();
                 PaintState();
             }
         }
@@ -188,16 +213,6 @@ namespace PathFinder {
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
             return (bool) value ? parameter : Binding.DoNothing;
-        }
-    }
-
-    class NodeIdxToCoord : IValueConverter {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-            return (int) value * (int) Node.Nodesize;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-            throw new NotImplementedException();
         }
     }
 

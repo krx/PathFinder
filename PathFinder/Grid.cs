@@ -9,6 +9,7 @@ using System.Windows;
 namespace PathFinder {
     class Grid {
         public ObservableCollection<Node> Nodes { get; }
+        public ObservableCollection<PathSegment> Path { get; }
 
         public int Width { get; private set; }
         public int Height { get; private set; }
@@ -20,6 +21,7 @@ namespace PathFinder {
 
         public Grid() {
             Nodes = new ObservableCollection<Node>();
+            Path = new ObservableCollection<PathSegment>();
             InitializeGrid(5, 5);
         }
 
@@ -53,8 +55,40 @@ namespace PathFinder {
             //Check if the start/end nodes are missing, replace them if they are
             if (!startCopied) this[0, this[0, 0].State == NodeState.End ? 1 : 0].State = NodeState.Start;
             if (!endCopied) this[0, this[0, 1].State == NodeState.Start ? 0 : 1].State = NodeState.End;
-
         }
 
+        public void ClearWalls() {
+            Nodes.ToList()
+                .Where(n => n.State != NodeState.Start && n.State != NodeState.End).ToList()
+                .ForEach(n => n.State = NodeState.Empty);
+        }
+
+        public void ClearPath() {
+            if (Path.Count > 0) Path.Clear();
+            Nodes.ToList()
+                .Where(n => n.State == NodeState.Open || n.State == NodeState.Closed).ToList()
+                .ForEach(n => n.State = NodeState.Empty);
+        }
+
+        public void GenPath(List<Node> trace) {
+            Path.Clear();
+            for (int i = 0; i < trace.Count - 1; ++i) {
+                Path.Add(new PathSegment(trace[i], trace[i + 1]));
+            }
+        }
+    }
+
+    class PathSegment {
+        public int X1 { get; }
+        public int Y1 { get; }
+        public int X2 { get; }
+        public int Y2 { get; }
+
+        public PathSegment(Node n1, Node n2) {
+            X1 = n1.CenterX;
+            Y1 = n1.CenterY;
+            X2 = n2.CenterX;
+            Y2 = n2.CenterY;
+        }
     }
 }

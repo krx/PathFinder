@@ -6,7 +6,6 @@
         x:Name="view">
     <Window.Resources>
         <pf:RadioIsCheckedConverter x:Key="RadioIsChecked"></pf:RadioIsCheckedConverter>
-        <pf:NodeIdxToCoord x:Key="NodeIdxToCoord"></pf:NodeIdxToCoord>
         <pf:HeuristicsEnabledConverter x:Key="HeuristicsEnabledConverter"></pf:HeuristicsEnabledConverter>
     </Window.Resources>
     <DockPanel>
@@ -134,6 +133,7 @@
                 <!-- Combine all lists into one -->
                 <CompositeCollection x:Key="Col">
                     <CollectionContainer Collection="{Binding DataContext.Grid.Nodes,Source={x:Reference view}}" />
+                    <CollectionContainer Collection="{Binding DataContext.Grid.Path,Source={x:Reference view}}" />
                 </CompositeCollection>
 
                 <!--Template for Node-->
@@ -201,6 +201,12 @@
                         </DataTrigger>
                     </DataTemplate.Triggers>
                 </DataTemplate>
+
+                <DataTemplate DataType="{x:Type pf:PathSegment}">
+                    <Line X1="{Binding X1}" Y1 ="{Binding Y1}"
+                          X2="{Binding X2}" Y2="{Binding Y2}"
+                          Stroke="Yellow" StrokeThickness="3"/>
+                </DataTemplate>
             </ItemsControl.Resources>
 
             <ItemsControl.ItemsSource>
@@ -218,12 +224,12 @@
 
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
-                    <Setter Property="Canvas.Left" Value="{Binding X, Converter={StaticResource NodeIdxToCoord}}" />
-                    <Setter Property="Canvas.Top" Value="{Binding Y, Converter={StaticResource NodeIdxToCoord}}" />
+                    <Setter Property="Canvas.Left" Value="{Binding CoordX}" />
+                    <Setter Property="Canvas.Top" Value="{Binding CoordY}" />
 
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Panel.ZIndex" Value="99"></Setter>
+                            <Setter Property="Panel.ZIndex" Value="10"></Setter>
                         </Trigger>
                     </Style.Triggers>
                 </Style>

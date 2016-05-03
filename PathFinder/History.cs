@@ -20,12 +20,18 @@ namespace PathFinder {
         }
 
         public void Clear() {
-            changes.Clear();
-            idx = 0;
+            if (changes.Count > 0) {
+                changes.Clear();
+                idx = 0;
+                grid.ClearPath();
+            }
         }
 
         public void Reset() {
-            idx = 0;
+            if (changes.Count > 0) {
+                idx = 0;
+                grid.ClearPath();
+            }
         }
 
         public bool Step() {

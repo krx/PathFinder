@@ -18,6 +18,11 @@ namespace PathFinder {
 
         public int X { get; }
         public int Y { get; }
+        public int CoordX => (int) (X * Nodesize);
+        public int CoordY => (int) (Y * Nodesize);
+        public int CenterX => (int) (CoordX + Nodesize / 2.0);
+        public int CenterY => (int) (CoordY + Nodesize / 2.0);
+
         public int GScore { get; set; }
         public int HScore { get; set; }
         public int FScore => GScore + HScore;
