@@ -22,7 +22,7 @@ namespace PathFinder {
     public partial class MainWindow {
         private MainViewModel vm;
         private bool mouseDown = false;
-        private Timer resizeTimer = new Timer(100) { Enabled = false };
+        private Timer resizeTimer = new Timer(200) { Enabled = false };
 
         public MainWindow() {
             InitializeComponent();

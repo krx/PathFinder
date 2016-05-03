@@ -67,6 +67,11 @@ namespace PathFinder {
                     ul = u && l;
                 }
 
+
+                // Up-Left
+                if (ul && IsWalkableAt(x - 1, y - 1, grid)) {
+                    neighbors.Add(grid[y - 1, x - 1]);
+                }
                 // Up-Right
                 if (ur && IsWalkableAt(x + 1, y - 1, grid)) {
                     neighbors.Add(grid[y - 1, x + 1]);
@@ -78,10 +83,6 @@ namespace PathFinder {
                 // Down-Left
                 if (dl && IsWalkableAt(x - 1, y + 1, grid)) {
                     neighbors.Add(grid[y + 1, x - 1]);
-                }
-                // Up-Left
-                if (ul && IsWalkableAt(x - 1, y - 1, grid)) {
-                    neighbors.Add(grid[y - 1, x - 1]);
                 }
             }
 

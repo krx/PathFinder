@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PathFinder.Finders {
     class BreadthFirst {
-        public static List<Node> Search(Node start, Node end, Grid grid, HeuristicFunc heuristic, bool diagAllowed, bool crossDiagAllowed) {
+        public static List<Node> Search(Node start, Node end, Grid grid, HeuristicFunc heuristic, bool diagAllowed, bool crossDiagAllowed, History hist) {
             if (!end.IsWalkable) return null;
             List<Node> closed = new List<Node>();
             List<Node> open = new List<Node> { start };
@@ -18,14 +18,15 @@ namespace PathFinder.Finders {
                 closed.Add(current);
 
                 if (current.Equals(end)) return Util.Backtrace(current);
-                if (current.State != NodeState.Start && current.State != NodeState.End) current.State = NodeState.Closed;
+                if (current.State != NodeState.Start && current.State != NodeState.End) hist.Push(current, NodeState.Closed);
 
-                foreach (Node neighbor in Util.GetNeighbors(current, grid, diagAllowed, crossDiagAllowed)) {
-                    if (closed.Contains(neighbor) || open.Contains(neighbor)) continue;
-                    open.Add(neighbor);
-                    if (neighbor.State != NodeState.End) neighbor.State = NodeState.Open;
-                    neighbor.Parent = current;
-                }
+                Util.GetNeighbors(current, grid, diagAllowed, crossDiagAllowed)
+                    .Where(n => !closed.Contains(n) && !open.Contains(n)).ToList()
+                    .ForEach(neighbor => {
+                        open.Add(neighbor);
+                        if (neighbor.State != NodeState.End) hist.Push(neighbor, NodeState.Open);
+                        neighbor.Parent = current;
+                    });
             }
             return null;
         }

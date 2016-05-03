@@ -24,6 +24,7 @@ namespace PathFinder {
         private int mouseXIdx;
         private int mouseYIdx;
         private NodeState dropType = NodeState.Empty;
+        private History hist;
 
         public Grid Grid { get; }
 
@@ -62,6 +63,7 @@ namespace PathFinder {
                 [0, 0] = { State = NodeState.Start },
                 [0, 1] = { State = NodeState.End }
             };
+            hist = new History(Grid);
 
             Algo = Algorithm.AStar;
             HeuristicFunction = Heuristic.Manhattan;
@@ -81,10 +83,16 @@ namespace PathFinder {
 
         public void StartSearch() {
             ClearPath();
+            hist.Clear();
             Node start = Grid.Nodes.First(n => n.State == NodeState.Start);
             Node end = Grid.Nodes.First(n => n.State == NodeState.End);
 
-            new Thread(() => Algo(start, end, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed)).Start();
+            new Thread(() => {
+                Algo(start, end, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed, hist);
+                while (hist.Step()) {
+                    Thread.Sleep(4);
+                }
+            }).Start();
         }
 
         public void ClearWalls() {
