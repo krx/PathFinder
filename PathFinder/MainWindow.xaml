@@ -12,19 +12,30 @@
         <DockPanel DockPanel.Dock="Right" Background="White" Panel.ZIndex="99">
 
             <GroupBox Header="Grid Controls" DockPanel.Dock="Bottom">
-                <StackPanel Orientation="Vertical">
-                    <Button Content="Clear All" Command="{Binding ClearAllCommand}" />
-                    <Button Content="Clear Path" Command="{Binding ClearPathCommand}" />
-                    <Button Content="Generate Maze" Command="{Binding GenMazeCommand}" />
-                </StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="65" />
+                        <ColumnDefinition Width="65" />
+                        <ColumnDefinition Width="65" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Content="Clear All" Command="{Binding ClearAllCommand}" />
+                    <Button Grid.Column="1" Content="Clear Path" Command="{Binding ClearPathCommand}" />
+                    <Button Grid.Column="2" Command="{Binding GenMazeCommand}">
+                        <TextBlock Text="Generate Maze" TextAlignment="Center" TextWrapping="Wrap" />
+                    </Button>
+                </Grid>
             </GroupBox>
 
             <GroupBox Header="Playback Controls" DockPanel.Dock="Bottom">
-                <StackPanel Orientation="Vertical">
+                <UniformGrid Rows="1" Columns="3" Height="40" >
                     <Button Content="Start" Command="{Binding StartCommand}" />
                     <Button Content="Pause" Command="{Binding PauseCommand}" />
                     <Button Content="Stop" Command="{Binding StopCommand}" />
-                </StackPanel>
+                </UniformGrid>
             </GroupBox>
 
             <GroupBox Header="Search Options">
