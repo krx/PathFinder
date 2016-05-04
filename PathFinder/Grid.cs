@@ -4,20 +4,33 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 
 namespace PathFinder {
     class Grid : INotifyPropertyChanged {
         private List<Node> _nodes;
-        private List<PathSegment> _path;
+        //        private List<PathSegment> _path;
+        private PointCollection _path;
+
+
 
         public List<Node> Nodes {
             get { return _nodes; }
             set { _nodes = value; OnPropertyChanged("Nodes"); }
         }
 
-        public List<PathSegment> Path {
+        //        public List<PathSegment> Path {
+        //            get { return _path; }
+        //            set { _path = value; OnPropertyChanged("Path"); }
+        //        }
+
+
+        public PointCollection Path {
             get { return _path; }
             set { _path = value; OnPropertyChanged("Path"); }
         }
@@ -31,8 +44,10 @@ namespace PathFinder {
 
         public Grid() {
             Nodes = new List<Node>();
-            Path = new List<PathSegment>();
+            //            Path = new List<PathSegment>();
+            Path = new PointCollection();
             InitializeGrid(5, 5);
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -54,10 +69,10 @@ namespace PathFinder {
         }
 
         public void ResizeGrid(int width, int height) {
-            ObservableCollection<Node> copy = new ObservableCollection<Node>(Nodes);
+            List<Node> copy = new List<Node>(Nodes);
             int oldWidth = Width, oldHeight = Height;
             bool startCopied = false, endCopied = false;
-            InitializeGrid((width / (int) Node.Nodesize) + 1, (height / (int) Node.Nodesize) + 1);
+            InitializeGrid((width / (int) Node.Nodesize), (height / (int) Node.Nodesize));
 
             //Copy over the previous grid state
             for (int row = 0; row < Math.Min(Height, oldHeight); ++row) {
@@ -101,32 +116,36 @@ namespace PathFinder {
         }
 
         public void ClearPath() {
-            if (Path.Count > 0) Path = new List<PathSegment>();
+            if (Path.Count > 0) Path = new PointCollection();
             Nodes.ToList()
                 .Where(n => n.State == NodeState.Open || n.State == NodeState.Closed).ToList()
                 .ForEach(n => n.State = NodeState.Empty);
         }
 
         public void GenPath(List<Node> trace) {
-            List<PathSegment> p = new List<PathSegment>();
-            for (int i = 0; i < trace.Count - 1; ++i) {
-                p.Add(new PathSegment(trace[i], trace[i + 1]));
-            }
-            Path = p;
-        }
-    }
+            Path = new PointCollection(trace.Select(n => new Point(n.CenterX, n.CenterY)));
 
-    class PathSegment {
-        public int X1 { get; }
-        public int Y1 { get; }
-        public int X2 { get; }
-        public int Y2 { get; }
+            // Generate the drawing animation
+            //            Storyboard sb = new Storyboard();
+            //            Polyline line = (Polyline) Application.Current.MainWindow.FindName("PathLine");
+            //            for (int i = 1; i < Path.Count; ++i) {
+            //                PointAnimation anim = new PointAnimation();
+            //                anim.From = Path[i - 1];
+            //                anim.To = Path[i];
+            //
+            //                anim.BeginTime = TimeSpan.FromMilliseconds(i * 1000);
+            //                anim.Duration = TimeSpan.FromMilliseconds(1000);
+            //
+            //                LineGeometry pls = new LineGeometry(Path[i - 1], Path[i]);
+            //                Storyboard.SetTarget(anim, pls);
+            //                Storyboard.SetTargetProperty(anim, new PropertyPath("EndPoint"));
+            //
+            //                sb.Children.Add(anim);
+            //            }
+            //
+            //            sb.Begin();
 
-        public PathSegment(Node n1, Node n2) {
-            X1 = n1.CenterX;
-            Y1 = n1.CenterY;
-            X2 = n2.CenterX;
-            Y2 = n2.CenterY;
+
         }
     }
 }

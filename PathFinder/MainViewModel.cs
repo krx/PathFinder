@@ -87,12 +87,14 @@ namespace PathFinder {
         }
 
         public void StartSearch() {
+            hist.Clear();
             new Thread(() => {
-                hist.Clear();
                 List<Node> path = Algo(Grid.StartNode, Grid.EndNode, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed, hist);
                 while (hist.Step()) {
                     Thread.Sleep(4);
                 }
+                if (path != null) Application.Current.Dispatcher.Invoke(() => Grid.GenPath(path));
+                //                Grid.GenPath(path);
             }).Start();
         }
 

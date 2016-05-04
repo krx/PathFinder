@@ -109,146 +109,114 @@
                 </StackPanel>
             </GroupBox>
         </DockPanel>
-
-        <!-- Canvas to display all dynamic elements -->
-        <ItemsControl  Name="ItemsCanvas" Padding="0"
+        <Grid>
+            <!-- Canvas to display all dynamic elements -->
+            <ItemsControl  Name="ItemsCanvas" Padding="0"
                        ScrollViewer.CanContentScroll="True"
                        VirtualizingStackPanel.IsVirtualizing="True"
-                       VirtualizingStackPanel.VirtualizationMode="Recycling">
-            <ItemsControl.Resources>
+                       VirtualizingStackPanel.VirtualizationMode="Recycling"
+                           ItemsSource="{Binding Grid.Nodes}">
+                <ItemsControl.Resources>
 
-                <!-- Combine all lists into one -->
-                <CompositeCollection x:Key="Col">
-                    <CollectionContainer Collection="{Binding DataContext.Grid.Nodes,Source={x:Reference view}}" />
-                    <CollectionContainer Collection="{Binding DataContext.Grid.Path,Source={x:Reference view}}" />
-                </CompositeCollection>
+                    <!--Template for Node-->
+                    <DataTemplate DataType="{x:Type pf:Node}">
+                        <Rectangle Stroke="#CC000000" StrokeThickness="0.25"
+                                   RenderTransformOrigin="0.5,0.5"
+                                   Width="{x:Static pf:Node.Nodesize}"
+                                   Height="{x:Static pf:Node.Nodesize}"
+                                   Name="nodeRect">
+                            <Rectangle.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform x:Name="rectScale" ScaleX="1" ScaleY="1" />
+                                    <TranslateTransform X="{Binding CoordX}" Y="{Binding CoordY}"></TranslateTransform>
+                                </TransformGroup>
+                            </Rectangle.RenderTransform>
 
-                <!--Template for Node-->
-                <DataTemplate DataType="{x:Type pf:Node}">
-                    <Rectangle Stroke="#CC000000" StrokeThickness="0.25"
-                               RenderTransformOrigin="0.5,0.5"
-                               Width="{x:Static pf:Node.Nodesize}"
-                               Height="{x:Static pf:Node.Nodesize}"
-                               Name="nodeRect">
-                        <Rectangle.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform x:Name="rectScale" ScaleX="1" ScaleY="1" />
-                                <TranslateTransform X="{Binding CoordX}" Y="{Binding CoordY}"></TranslateTransform>
-                            </TransformGroup>
-                        </Rectangle.RenderTransform>
+                            <Rectangle.Style>
+                                <Style TargetType="{x:Type Rectangle}">
+                                    <Setter Property="Fill" Value="White"></Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Start}">
+                                            <Setter  Property="Fill" Value="#00FF00"></Setter>
+                                        </DataTrigger>
 
-                        <Rectangle.Style>
-                            <Style TargetType="{x:Type Rectangle}">
-                                <Setter Property="Fill" Value="Transparent"></Setter>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Start}">
-                                        <Setter  Property="Fill" Value="#00FF00"></Setter>
-                                    </DataTrigger>
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.End}">
+                                            <Setter Property="Fill" Value="Red"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Rectangle.Style>
+                        </Rectangle>
 
-                                    <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.End}">
-                                        <Setter Property="Fill" Value="Red"></Setter>
-                                    </DataTrigger>
-
-                                    <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Open}">
-                                        <Setter Property="Fill" Value="Orange"></Setter>
-                                    </DataTrigger>
-
-                                    <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Closed}">
-                                        <Setter Property="Fill" Value="Cyan"></Setter>
-                                    </DataTrigger>
-
-                                    <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Wall}">
-                                        <DataTrigger.EnterActions>
-                                            <BeginStoryboard Name="toWall">
-                                                <Storyboard>
-                                                    <ColorAnimation Storyboard.TargetProperty="Fill.Color" 
-                                                                    To="Gray" Duration="0:0:0.1"/>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </DataTrigger.EnterActions>
-
-                                        <DataTrigger.ExitActions>
-                                            <StopStoryboard BeginStoryboardName="toWall"></StopStoryboard>
-                                        </DataTrigger.ExitActions>
-                                    </DataTrigger>
-
-                                    <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Empty}">
-                                        <DataTrigger.EnterActions>
-                                            <BeginStoryboard Name="toEmpty">
-                                                <Storyboard>
-                                                    <ColorAnimation Storyboard.TargetProperty="Fill.Color" 
-                                                                    To="White" Duration="0:0:0.1"/>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </DataTrigger.EnterActions>
-                                        <DataTrigger.ExitActions>
-                                            <StopStoryboard BeginStoryboardName="toEmpty"></StopStoryboard>
-                                        </DataTrigger.ExitActions>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Rectangle.Style>
-                    </Rectangle>
-
-                    <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Wall}">
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation  Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleX" 
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Wall}">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation  Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleX" 
                                                           To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                        <DoubleAnimation Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleY" 
+                                            <DoubleAnimation Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleY" 
                                                          To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
 
-                            <DataTrigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation  Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleX" 
+                                <DataTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation  Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleX" 
                                                           To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                        <DoubleAnimation Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleY" 
+                                            <DoubleAnimation Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleY" 
                                                          To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.ExitActions>
-                        </DataTrigger>
-                    </DataTemplate.Triggers>
-                </DataTemplate>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ItemsControl.Resources>
 
-                <DataTemplate DataType="{x:Type pf:PathSegment}">
-                    <Line X1="{Binding X1}" Y1 ="{Binding Y1}"
-                          X2="{Binding X2}" Y2="{Binding Y2}"
-                          Stroke="Yellow" StrokeThickness="3"/>
-                </DataTemplate>
-            </ItemsControl.Resources>
-
-            <ItemsControl.ItemsSource>
-                <StaticResource ResourceKey="Col" />
-            </ItemsControl.ItemsSource>
-
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas IsItemsHost="True" Background="White"
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas IsItemsHost="True" Background="White"
                             Width="{Binding ElementName=ItemsCanvas, Path=ActualWidth}"
                             Height="{Binding ElementName=ItemsCanvas, Path=ActualHeight}"
-                            VerticalAlignment="Top" HorizontalAlignment="Left" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+                            VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
 
-            <ItemsControl.ItemContainerStyle>
-                <Style TargetType="ContentPresenter">
-                    <!--                    <Setter Property="Canvas.Left" Value="{Binding CoordX}" />-->
-                    <!--                    <Setter Property="Canvas.Top" Value="{Binding CoordY}" />-->
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Panel.ZIndex" Value="99"></Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
 
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Panel.ZIndex" Value="10"></Setter>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </ItemsControl.ItemContainerStyle>
-        </ItemsControl>
+            <Polyline Points="{Binding Grid.Path}" 
+                      Panel.ZIndex="999" 
+                      Name="PathLine">
+                <Polyline.Style>
+                    <Style TargetType="Polyline">
+                        <Setter Property="Stroke" Value="Yellow" />
+                        <Setter Property="StrokeThickness" Value="4" />
+
+
+                        <!--                        <Style.Triggers>-->
+                        <!--                            <EventTrigger RoutedEvent="Binding.SourceUpdated">-->
+                        <!--                                <BeginStoryboard>-->
+                        <!--                                    <Storyboard>-->
+                        <!--                                        <ColorAnimation Storyboard.TargetProperty="Stroke.Color" To="Blue"  Duration="0:0:2"></ColorAnimation>-->
+                        <!--                                    </Storyboard>-->
+                        <!--                                </BeginStoryboard>-->
+                        <!--                            </EventTrigger>-->
+                        <!--                        </Style.Triggers>-->
+                    </Style>
+                </Polyline.Style>
+            </Polyline>
+        </Grid>
     </DockPanel>
 </Window>
