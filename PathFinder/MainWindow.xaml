@@ -116,10 +116,11 @@
                        VirtualizingStackPanel.IsVirtualizing="True"
                        VirtualizingStackPanel.VirtualizationMode="Recycling">
             <ItemsControl.Resources>
+
                 <!-- Combine all lists into one -->
                 <CompositeCollection x:Key="Col">
-                    <CollectionContainer Collection="{Binding DataContext.Grid.Nodes,Source={x:Reference view},IsAsync=True}" />
-                    <CollectionContainer Collection="{Binding DataContext.Grid.Path,Source={x:Reference view},IsAsync=True}" />
+                    <CollectionContainer Collection="{Binding DataContext.Grid.Nodes,Source={x:Reference view}}" />
+                    <CollectionContainer Collection="{Binding DataContext.Grid.Path,Source={x:Reference view}}" />
                 </CompositeCollection>
 
                 <!--Template for Node-->
@@ -128,111 +129,89 @@
                                RenderTransformOrigin="0.5,0.5"
                                Width="{x:Static pf:Node.Nodesize}"
                                Height="{x:Static pf:Node.Nodesize}"
-                               Name="nodeRect" Fill="White">
+                               Name="nodeRect">
                         <Rectangle.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform x:Name="rectScale" ScaleX="1" ScaleY="1" />
                                 <TranslateTransform X="{Binding CoordX}" Y="{Binding CoordY}"></TranslateTransform>
                             </TransformGroup>
                         </Rectangle.RenderTransform>
+
+                        <Rectangle.Style>
+                            <Style TargetType="{x:Type Rectangle}">
+                                <Setter Property="Fill" Value="Transparent"></Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Start}">
+                                        <Setter  Property="Fill" Value="#00FF00"></Setter>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.End}">
+                                        <Setter Property="Fill" Value="Red"></Setter>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Open}">
+                                        <Setter Property="Fill" Value="Orange"></Setter>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Closed}">
+                                        <Setter Property="Fill" Value="Cyan"></Setter>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Wall}">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard Name="toWall">
+                                                <Storyboard>
+                                                    <ColorAnimation Storyboard.TargetProperty="Fill.Color" 
+                                                                    To="Gray" Duration="0:0:0.1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+
+                                        <DataTrigger.ExitActions>
+                                            <StopStoryboard BeginStoryboardName="toWall"></StopStoryboard>
+                                        </DataTrigger.ExitActions>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Empty}">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard Name="toEmpty">
+                                                <Storyboard>
+                                                    <ColorAnimation Storyboard.TargetProperty="Fill.Color" 
+                                                                    To="White" Duration="0:0:0.1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                        <DataTrigger.ExitActions>
+                                            <StopStoryboard BeginStoryboardName="toEmpty"></StopStoryboard>
+                                        </DataTrigger.ExitActions>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Rectangle.Style>
                     </Rectangle>
 
                     <DataTemplate.Triggers>
-                        <!--Start and end colors-->
-                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Start}">
-                            <Setter TargetName="nodeRect" Property="Fill" Value="#00FF00"></Setter>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.End}">
-                            <Setter TargetName="nodeRect" Property="Fill" Value="Red"></Setter>
-                        </DataTrigger>
-
-                        <!--The wall trigger has a nice transition animation-->
                         <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Wall}">
                             <DataTrigger.EnterActions>
-                                <BeginStoryboard Name="toWall">
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="nodeRect" 
-                                                        Storyboard.TargetProperty="Fill.Color"
-                                                        To="Gray" Duration="0:0:0.1"/>
-                                        <DoubleAnimation Storyboard.TargetName="rectScale" 
-                                                        Storyboard.TargetProperty="ScaleX"
-                                                        To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                        <DoubleAnimation Storyboard.TargetName="rectScale"
-                                                        Storyboard.TargetProperty="ScaleY"
-                                                        To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-
-                            <DataTrigger.ExitActions>
-                                <StopStoryboard BeginStoryboardName="toWall"></StopStoryboard>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="rectScale" 
-                                                        Storyboard.TargetProperty="ScaleX"
-                                                        To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                        <DoubleAnimation Storyboard.TargetName="rectScale"
-                                                        Storyboard.TargetProperty="ScaleY"
-                                                        To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                                <!--The only time you ever exit a wall state is to go to an empty state, 
-                                    so make that switch here-->
-                            </DataTrigger.ExitActions>
-                        </DataTrigger>
-
-                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Empty}">
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard Name="toEmpty">
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="nodeRect" 
-                                                        Storyboard.TargetProperty="Fill.Color" 
-                                                        To="White" Duration="0:0:0.1"/>
-                                        <!--                                        <DoubleAnimation Storyboard.TargetName="rectScale" -->
-                                        <!--                                                                                 Storyboard.TargetProperty="ScaleX"-->
-                                        <!--                                                                                 To="1.2" Duration="0:0:0.1" AutoReverse="True" />-->
-                                        <!--                                        <DoubleAnimation Storyboard.TargetName="rectScale"-->
-                                        <!--                                                                                 Storyboard.TargetProperty="ScaleY"-->
-                                        <!--                                                                                 To="1.2" Duration="0:0:0.1" AutoReverse="True" />-->
+                                        <DoubleAnimation  Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleX" 
+                                                          To="1.2" Duration="0:0:0.1" AutoReverse="True" />
+                                        <DoubleAnimation Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleY" 
+                                                         To="1.2" Duration="0:0:0.1" AutoReverse="True" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </DataTrigger.EnterActions>
+
                             <DataTrigger.ExitActions>
-                                <StopStoryboard BeginStoryboardName="toEmpty"></StopStoryboard>
-                            </DataTrigger.ExitActions>
-                        </DataTrigger>
-
-
-                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Open}">
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard Name="toOpen">
+                                <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="nodeRect" 
-                                                        Storyboard.TargetProperty="Fill.Color" 
-                                                        To="Orange" Duration="0:0:0.05"/>
+                                        <DoubleAnimation  Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleX" 
+                                                          To="1.2" Duration="0:0:0.1" AutoReverse="True" />
+                                        <DoubleAnimation Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleY" 
+                                                         To="1.2" Duration="0:0:0.1" AutoReverse="True" />
                                     </Storyboard>
                                 </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-                            <DataTrigger.ExitActions>
-                                <StopStoryboard BeginStoryboardName="toOpen"></StopStoryboard>
-                            </DataTrigger.ExitActions>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Closed}">
-                            <DataTrigger.EnterActions>
-                                <StopStoryboard BeginStoryboardName="toEmpty"></StopStoryboard>
-                                <StopStoryboard BeginStoryboardName="toWall"></StopStoryboard>
-                                <StopStoryboard BeginStoryboardName="toClosed"></StopStoryboard>
-                                <StopStoryboard BeginStoryboardName="toEmpty"></StopStoryboard>
-                                <BeginStoryboard Name="toClosed">
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="nodeRect"
-                                                        Storyboard.TargetProperty="Fill.Color"
-                                                        To="Cyan" Duration="0:0:0.05"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-                            <DataTrigger.ExitActions>
-                                <StopStoryboard BeginStoryboardName="toClosed"></StopStoryboard>
                             </DataTrigger.ExitActions>
                         </DataTrigger>
                     </DataTemplate.Triggers>

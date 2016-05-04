@@ -87,9 +87,8 @@ namespace PathFinder {
         }
 
         public void StartSearch() {
-            hist.Clear();
             new Thread(() => {
-                Thread.Sleep(100);
+                hist.Clear();
                 List<Node> path = Algo(Grid.StartNode, Grid.EndNode, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed, hist);
                 while (hist.Step()) {
                     Thread.Sleep(4);
@@ -141,7 +140,6 @@ namespace PathFinder {
                         dropType = Grid[mouseYIdx, mouseXIdx].State;
                         break;
                 }
-                //                Grid.ClearPath();
                 PaintState();
             }
         }
