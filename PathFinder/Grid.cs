@@ -1,39 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace PathFinder {
-    class Grid {
-        public ObservableCollection<Node> Nodes { get; }
-        public ObservableCollection<PathSegment> Path { get; }
+    class Grid : INotifyPropertyChanged {
+        private List<Node> _nodes;
+        private List<PathSegment> _path;
+
+        public List<Node> Nodes {
+            get { return _nodes; }
+            set { _nodes = value; OnPropertyChanged("Nodes"); }
+        }
+
+        public List<PathSegment> Path {
+            get { return _path; }
+            set { _path = value; OnPropertyChanged("Path"); }
+        }
 
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public Node this[int row, int col] {
-            get { return Nodes[row * Width + col]; }
-            private set { Nodes[row * Width + col] = value; }
-        }
+        public Node StartNode => Nodes.First(n => n.State == NodeState.Start);
+        public Node EndNode => Nodes.First(n => n.State == NodeState.End);
+        public Node this[int row, int col] => Nodes[row * Width + col];
 
         public Grid() {
-            Nodes = new ObservableCollection<Node>();
-            Path = new ObservableCollection<PathSegment>();
+            Nodes = new List<Node>();
+            Path = new List<PathSegment>();
             InitializeGrid(5, 5);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName) {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void InitializeGrid(int width, int height) {
             Width = width;
             Height = height;
-            Nodes.Clear();
+            List<Node> newNodes = new List<Node>();
             for (int y = 0; y < Height; ++y) {
                 for (int x = 0; x < Width; ++x) {
-                    Nodes.Add(new Node(x, y));
+                    newNodes.Add(new Node(x, y));
                 }
             }
+            Nodes = newNodes;
         }
 
         public void ResizeGrid(int width, int height) {
@@ -48,7 +65,7 @@ namespace PathFinder {
                     Node n = copy[row * oldWidth + col];
                     if (n.State == NodeState.Start) startCopied = true;
                     if (n.State == NodeState.End) endCopied = true;
-                    this[row, col] = n;
+                    this[row, col].State = n.State;
                 }
             }
 
@@ -57,24 +74,45 @@ namespace PathFinder {
             if (!endCopied) this[0, this[0, 1].State == NodeState.Start ? 0 : 1].State = NodeState.End;
         }
 
+        public void SetStart(int x, int y) {
+            if (Util.IsValid(x, y, this)) {
+                Node n = this[y, x];
+                if (n.State != NodeState.End && n.State != NodeState.Wall) {
+                    StartNode.State = NodeState.Empty;
+                    n.State = NodeState.Start;
+                }
+            }
+        }
+
+        public void SetEnd(int x, int y) {
+            if (Util.IsValid(x, y, this)) {
+                Node n = this[y, x];
+                if (n.State != NodeState.Start && n.State != NodeState.Wall) {
+                    EndNode.State = NodeState.Empty;
+                    n.State = NodeState.End;
+                }
+            }
+        }
+
         public void ClearWalls() {
-            Nodes.ToList()
-                .Where(n => n.State != NodeState.Start && n.State != NodeState.End).ToList()
+            Nodes.ToList().
+                Where(n => n.State != NodeState.Start && n.State != NodeState.End).ToList()
                 .ForEach(n => n.State = NodeState.Empty);
         }
 
         public void ClearPath() {
-            if (Path.Count > 0) Path.Clear();
+            if (Path.Count > 0) Path = new List<PathSegment>();
             Nodes.ToList()
                 .Where(n => n.State == NodeState.Open || n.State == NodeState.Closed).ToList()
                 .ForEach(n => n.State = NodeState.Empty);
         }
 
         public void GenPath(List<Node> trace) {
-            Path.Clear();
+            List<PathSegment> p = new List<PathSegment>();
             for (int i = 0; i < trace.Count - 1; ++i) {
-                Path.Add(new PathSegment(trace[i], trace[i + 1]));
+                p.Add(new PathSegment(trace[i], trace[i + 1]));
             }
+            Path = p;
         }
     }
 
