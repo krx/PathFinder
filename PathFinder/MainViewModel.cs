@@ -59,7 +59,7 @@ namespace PathFinder {
 
 
         // Commands
-        public ICommand ClearWallsCommand { get; }
+        public ICommand ClearAllCommand { get; }
         public ICommand ClearPathCommand { get; }
         public ICommand GenMazeCommand { get; }
         public ICommand StartCommand { get; }
@@ -75,7 +75,7 @@ namespace PathFinder {
             DiagonalsAllowed = true;
             CornerCutAllowed = true;
 
-            ClearWallsCommand = new RelayCommand(o => Grid.ClearWalls());
+            ClearAllCommand = new RelayCommand(o => Grid.ClearAll());
             ClearPathCommand = new RelayCommand(o => Grid.ClearPath());
             StartCommand = new RelayCommand(o => StartSearch());
         }

@@ -13,7 +13,7 @@
 
             <GroupBox Header="Grid Controls" DockPanel.Dock="Bottom">
                 <StackPanel Orientation="Vertical">
-                    <Button Content="Clear Walls" Command="{Binding ClearWallsCommand}" />
+                    <Button Content="Clear All" Command="{Binding ClearAllCommand}" />
                     <Button Content="Clear Path" Command="{Binding ClearPathCommand}" />
                     <Button Content="Generate Maze" Command="{Binding GenMazeCommand}" />
                 </StackPanel>

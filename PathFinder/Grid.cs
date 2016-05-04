@@ -14,7 +14,6 @@ using System.Windows.Shapes;
 namespace PathFinder {
     class Grid : INotifyPropertyChanged {
         private List<Node> _nodes;
-        //        private List<PathSegment> _path;
         private PointCollection _path;
 
 
@@ -23,12 +22,6 @@ namespace PathFinder {
             get { return _nodes; }
             set { _nodes = value; OnPropertyChanged("Nodes"); }
         }
-
-        //        public List<PathSegment> Path {
-        //            get { return _path; }
-        //            set { _path = value; OnPropertyChanged("Path"); }
-        //        }
-
 
         public PointCollection Path {
             get { return _path; }
@@ -44,7 +37,6 @@ namespace PathFinder {
 
         public Grid() {
             Nodes = new List<Node>();
-            //            Path = new List<PathSegment>();
             Path = new PointCollection();
             InitializeGrid(5, 5);
 
@@ -109,7 +101,8 @@ namespace PathFinder {
             }
         }
 
-        public void ClearWalls() {
+        public void ClearAll() {
+            if (Path.Count > 0) Path = new PointCollection();
             Nodes.ToList().
                 Where(n => n.State != NodeState.Start && n.State != NodeState.End).ToList()
                 .ForEach(n => n.State = NodeState.Empty);
@@ -124,28 +117,6 @@ namespace PathFinder {
 
         public void GenPath(List<Node> trace) {
             Path = new PointCollection(trace.Select(n => new Point(n.CenterX, n.CenterY)));
-
-            // Generate the drawing animation
-            //            Storyboard sb = new Storyboard();
-            //            Polyline line = (Polyline) Application.Current.MainWindow.FindName("PathLine");
-            //            for (int i = 1; i < Path.Count; ++i) {
-            //                PointAnimation anim = new PointAnimation();
-            //                anim.From = Path[i - 1];
-            //                anim.To = Path[i];
-            //
-            //                anim.BeginTime = TimeSpan.FromMilliseconds(i * 1000);
-            //                anim.Duration = TimeSpan.FromMilliseconds(1000);
-            //
-            //                LineGeometry pls = new LineGeometry(Path[i - 1], Path[i]);
-            //                Storyboard.SetTarget(anim, pls);
-            //                Storyboard.SetTargetProperty(anim, new PropertyPath("EndPoint"));
-            //
-            //                sb.Children.Add(anim);
-            //            }
-            //
-            //            sb.Begin();
-
-
         }
     }
 }
