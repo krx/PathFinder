@@ -72,9 +72,12 @@ namespace PathFinder {
 
                             // Scaling animation for walls
                             if (State == NodeState.Wall || old == NodeState.Wall) {
-                                Console.WriteLine(scale?.ToString() ?? "NULL");
-                                DoubleAnimation scaleAnim = new DoubleAnimation(1, 1.2, TimeSpan.FromMilliseconds(75));
-                                scaleAnim.AutoReverse = true;
+                                DoubleAnimation scaleAnim = new DoubleAnimation {
+                                    From = 1,
+                                    To = 1.2,
+                                    Duration = TimeSpan.FromMilliseconds(75),
+                                    AutoReverse = true
+                                };
                                 scale.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnim);
                                 scale.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnim);
                             }

@@ -38,12 +38,14 @@ namespace PathFinder {
         }
 
         void ResizingDone(object sender, ElapsedEventArgs e) {
-            resizeTimer.Stop();
+            if (vm.CanModify()) {
+                resizeTimer.Stop();
 
-            Dispatcher.Invoke(() => {
-                ItemsControl c = (ItemsControl) FindName("ItemsCanvas");
-                vm.Grid.ResizeGrid((int) c.ActualWidth, (int) c.ActualHeight);
-            });
+                Dispatcher.Invoke(() => {
+                    ItemsControl c = (ItemsControl) FindName("ItemsCanvas");
+                    vm.Grid.ResizeGrid((int) c.ActualWidth, (int) c.ActualHeight);
+                });
+            }
         }
 
         private void OnResize(object sender, RoutedEventArgs e) {
