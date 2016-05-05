@@ -78,6 +78,8 @@ namespace PathFinder {
             ClearAllCommand = new RelayCommand(o => Grid.ClearAll());
             ClearPathCommand = new RelayCommand(o => Grid.ClearPath());
             StartCommand = new RelayCommand(o => StartSearch());
+
+            GenMazeCommand = new RelayCommand(o => GenMaze());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -95,6 +97,19 @@ namespace PathFinder {
                 }
                 if (path != null) Application.Current.Dispatcher.Invoke(() => Grid.GenPath(path));
                 //                Grid.GenPath(path);
+            }).Start();
+        }
+
+        public void GenMaze() {
+            hist.Clear(false);
+            Grid.Path = new PointCollection();
+            DiagonalsAllowed = false;
+            new Thread(() => {
+                MazeGenerator.Generate(Grid, hist);
+                while (hist.Step()) {
+                    Thread.Sleep(4);
+                }
+
             }).Start();
         }
 

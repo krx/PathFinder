@@ -19,11 +19,11 @@ namespace PathFinder {
             changes.Add(new NodeChange(n.X, n.Y, next));
         }
 
-        public void Clear() {
+        public void Clear(bool clearPath = true) {
             if (changes.Count > 0) {
                 changes.Clear();
                 idx = 0;
-                grid.ClearPath();
+                if (clearPath) grid.ClearPath();
             }
         }
 

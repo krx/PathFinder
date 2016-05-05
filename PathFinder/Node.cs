@@ -49,7 +49,7 @@ namespace PathFinder {
                 NodeState prev = _state;
                 _state = value;
                 OnPropertyChanged("State");
-                AnimColor(prev);
+                UpdateColor(prev);
             }
         }
 
@@ -61,13 +61,25 @@ namespace PathFinder {
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void AnimColor(NodeState old) {
+        private void UpdateColor(NodeState old) {
             Application.Current.Dispatcher.Invoke(() => {
                 ItemsControl ctl = (ItemsControl) Application.Current.MainWindow.FindName("ItemsCanvas");
                 if (ctl.Items.Count > 0) {
                     Rectangle rect = Util.FindDescendant<Rectangle>(ctl.ItemContainerGenerator.ContainerFromItem(this));
                     if (rect != null) {
+                        ScaleTransform scale = (ScaleTransform) rect.FindName("rectScale");
                         if (old != NodeState.Start && old != NodeState.End && State != NodeState.Start && State != NodeState.End) {
+
+                            // Scaling animation for walls
+                            if (State == NodeState.Wall || old == NodeState.Wall) {
+                                Console.WriteLine(scale?.ToString() ?? "NULL");
+                                DoubleAnimation scaleAnim = new DoubleAnimation(1, 1.2, TimeSpan.FromMilliseconds(75));
+                                scaleAnim.AutoReverse = true;
+                                scale.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnim);
+                                scale.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnim);
+                            }
+
+                            //Color animation
                             Storyboard sb = new Storyboard();
                             ColorAnimation anim = new ColorAnimation(cmap[old], cmap[State], TimeSpan.FromMilliseconds(75));
                             Storyboard.SetTarget(anim, rect);

@@ -126,7 +126,7 @@
                        ScrollViewer.CanContentScroll="True"
                        VirtualizingStackPanel.IsVirtualizing="True"
                        VirtualizingStackPanel.VirtualizationMode="Recycling"
-                           ItemsSource="{Binding Grid.Nodes}">
+                           ItemsSource="{Binding Grid.Nodes, IsAsync=True}">
                 <ItemsControl.Resources>
 
                     <!--Template for Node-->
@@ -158,32 +158,6 @@
                                 </Style>
                             </Rectangle.Style>
                         </Rectangle>
-
-                        <DataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Wall}">
-                                <DataTrigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation  Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleX" 
-                                                          To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                            <DoubleAnimation Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleY" 
-                                                         To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.EnterActions>
-
-                                <DataTrigger.ExitActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation  Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleX" 
-                                                          To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                            <DoubleAnimation Storyboard.TargetName="rectScale" Storyboard.TargetProperty="ScaleY" 
-                                                         To="1.2" Duration="0:0:0.1" AutoReverse="True" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.ExitActions>
-                            </DataTrigger>
-                        </DataTemplate.Triggers>
                     </DataTemplate>
                 </ItemsControl.Resources>
 
@@ -208,26 +182,10 @@
             </ItemsControl>
 
             <Polyline Points="{Binding Grid.Path}" 
-                      Panel.ZIndex="999" 
-                      Name="PathLine">
-                <Polyline.Style>
-                    <Style TargetType="Polyline">
-                        <Setter Property="Stroke" Value="Yellow" />
-                        <Setter Property="StrokeThickness" Value="4" />
-
-
-                        <!--                        <Style.Triggers>-->
-                        <!--                            <EventTrigger RoutedEvent="Binding.SourceUpdated">-->
-                        <!--                                <BeginStoryboard>-->
-                        <!--                                    <Storyboard>-->
-                        <!--                                        <ColorAnimation Storyboard.TargetProperty="Stroke.Color" To="Blue"  Duration="0:0:2"></ColorAnimation>-->
-                        <!--                                    </Storyboard>-->
-                        <!--                                </BeginStoryboard>-->
-                        <!--                            </EventTrigger>-->
-                        <!--                        </Style.Triggers>-->
-                    </Style>
-                </Polyline.Style>
-            </Polyline>
+                      Panel.ZIndex="999"
+                      Stroke="Yellow"
+                      StrokeThickness="4"
+                      Name="PathLine" />
         </Grid>
     </DockPanel>
 </Window>

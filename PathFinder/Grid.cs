@@ -103,8 +103,8 @@ namespace PathFinder {
 
         public void ClearAll() {
             if (Path.Count > 0) Path = new PointCollection();
-            Nodes.ToList().
-                Where(n => n.State != NodeState.Start && n.State != NodeState.End).ToList()
+            Nodes.ToList()
+                .Where(n => n.State != NodeState.Start && n.State != NodeState.End).ToList()
                 .ForEach(n => n.State = NodeState.Empty);
         }
 
