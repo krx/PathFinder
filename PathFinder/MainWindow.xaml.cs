@@ -31,7 +31,6 @@ namespace PathFinder {
             SizeChanged += OnResize;
             MouseMove += (sender, args) => vm.OnMouseMoved(Mouse.GetPosition(this));
             MouseLeftButtonDown += (sender, args) => vm.OnLeftMouseDown();
-            MouseLeftButtonUp += (sender, args) => vm.OnLeftMouseUp();
 
             resizeTimer.Elapsed += ResizingDone;
         }

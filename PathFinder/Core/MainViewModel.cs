@@ -240,9 +240,6 @@ namespace PathFinder {
                 PaintState();
             }
         }
-
-        public void OnLeftMouseUp() {
-        }
     }
 
     class RadioIsCheckedConverter : IValueConverter {
