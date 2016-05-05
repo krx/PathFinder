@@ -114,10 +114,32 @@
                     <GroupBox Header="Optional Settings">
                         <StackPanel Orientation="Vertical">
                             <CheckBox Content="Diagonals Allowed"  Name="DiagBox" 
-                                      IsChecked="{Binding DiagonalsAllowed}"/>
+                                      IsChecked="{Binding DiagonalsAllowed}">
+                                <CheckBox.ToolTip>
+                                    <ToolTip Width="256">
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock TextWrapping="Wrap">Check to allow the path to move diagonally</TextBlock>
+                                            <Separator />
+                                            <Image Source="Images/normalvsdiag.png" />
+                                        </StackPanel>
+                                    </ToolTip>
+                                </CheckBox.ToolTip>
+                            </CheckBox>
                             <CheckBox Content="Corner Crossing Allowed" 
                                       IsEnabled="{Binding ElementName=DiagBox, Path=IsChecked}"
-                                      IsChecked="{Binding CornerCutAllowed}"/>
+                                      IsChecked="{Binding CornerCutAllowed}">
+                                <CheckBox.ToolTip>
+                                    <ToolTip Width="256">
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock TextWrapping="Wrap">
+                                                Check to allow the path to move closely along a corner (touching it) instead of keeping a distance
+                                            </TextBlock>
+                                            <Separator />
+                                            <Image Source="Images/cornercross.png" />
+                                        </StackPanel>
+                                    </ToolTip>
+                                </CheckBox.ToolTip>
+                            </CheckBox>
                         </StackPanel>
                     </GroupBox>
 
@@ -126,13 +148,49 @@
                         <StackPanel Orientation="Vertical">
                             <RadioButton Content="Manhattan" IsChecked="{Binding HeuristicFunction, 
 								Converter={StaticResource RadioIsChecked},
-								ConverterParameter={x:Static pf:Heuristic.Manhattan}}" />
+								ConverterParameter={x:Static pf:Heuristic.Manhattan}}">
+                                <RadioButton.ToolTip>
+                                    <ToolTip Width="256">
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock TextWrapping="Wrap">
+                                                The Manhattan heuristic is the sum of the horizontal and vertical distances between two nodes
+                                            </TextBlock>
+                                            <Separator />
+                                            <Image Source="Images/manhattan.png" />
+                                        </StackPanel>
+                                    </ToolTip>
+                                </RadioButton.ToolTip>
+                            </RadioButton>
                             <RadioButton Content="Euclidean" IsChecked="{Binding HeuristicFunction, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:Heuristic.Euclidean}}" />
+								ConverterParameter={x:Static pf:Heuristic.Euclidean}}">
+                                <RadioButton.ToolTip>
+                                    <ToolTip Width="256">
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock TextWrapping="Wrap">
+                                                The Euclidean heuristic is the exact distance between two nodes
+                                            </TextBlock>
+                                            <Separator />
+                                            <Image Source="Images/euclidean.png" />
+                                        </StackPanel>
+                                    </ToolTip>
+                                </RadioButton.ToolTip>
+                            </RadioButton>
                             <RadioButton Content="Chebyshev" IsChecked="{Binding HeuristicFunction, 
 								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:Heuristic.Chebyshev}}" />
+								ConverterParameter={x:Static pf:Heuristic.Chebyshev}}">
+                                <RadioButton.ToolTip>
+                                    <ToolTip Width="256">
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock TextWrapping="Wrap">
+                                                The Chebyshev heuristic is the maximum of the horizontal and vertical distances between two nodes
+                                            </TextBlock>
+                                            <Separator />
+                                            <Image Source="Images/chebyshev.png" />
+                                        </StackPanel>
+                                    </ToolTip>
+                                </RadioButton.ToolTip>
+                            </RadioButton>
                         </StackPanel>
 
                         <!--Fade the groupbox in/out on enable/disable-->
