@@ -41,12 +41,20 @@ namespace PathFinder {
         // Binded properties
         public AlgoFunc Algo {
             get { return _algorithm; }
-            set { _algorithm = value; OnPropertyChanged("Algo"); }
+            set {
+                _algorithm = value;
+                OnPropertyChanged("Algo");
+                playState = PlaybackState.Modified;
+            }
         }
 
         public HeuristicFunc HeuristicFunction {
             get { return _heuristic; }
-            set { _heuristic = value; OnPropertyChanged("HeuristicFunction"); }
+            set {
+                _heuristic = value;
+                OnPropertyChanged("HeuristicFunction");
+                playState = PlaybackState.Modified;
+            }
         }
 
         public bool DiagonalsAllowed {
