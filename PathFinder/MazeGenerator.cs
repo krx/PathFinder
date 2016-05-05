@@ -29,7 +29,7 @@ namespace PathFinder {
                 } else if (traced.Count > 0) {
                     current = traced.Pop();
                 } else {
-                    visited.Add(current); //TODO move up?
+                    visited.Add(current);
                     current = RandomCell(grid, visited);
                 }
                 if (current.State == NodeState.Wall) {

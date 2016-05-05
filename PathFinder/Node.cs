@@ -57,11 +57,10 @@ namespace PathFinder {
         public ICommand UpdateColorCommand { get; }
 
         public Node(int x, int y, NodeState state = NodeState.Empty) {
-            UpdateColorCommand = new RelayCommand(o => UpdateColor(State, false));
             X = x;
             Y = y;
             State = state;
-
+            UpdateColorCommand = new RelayCommand(o => UpdateColor(State, false));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

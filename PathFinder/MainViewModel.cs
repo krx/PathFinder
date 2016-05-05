@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -22,18 +23,22 @@ namespace PathFinder {
         private bool _cornerCutAllowed;
         private AlgoFunc _algorithm;
         private HeuristicFunc _heuristic;
+        private string _statPathLength;
+        private string _statTime;
+        private string _statNodesExplored;
         private int mouseXIdx;
         private int mouseYIdx;
         private NodeState dropType = NodeState.Empty;
         private List<Node> path;
         private Thread playThread;
+        private double algoTime;
 
         // Search playback
         enum PlaybackState {
-            Playing, Restart, Paused, SearchComplete, Modified, GeneratingMaze
+            Playing, Paused, SearchComplete, Modified, GeneratingMaze
         }
         private History hist;
-        volatile PlaybackState playState = PlaybackState.Modified;
+        private volatile PlaybackState playState = PlaybackState.Modified;
 
 
         public Grid Grid { get; }
@@ -67,6 +72,20 @@ namespace PathFinder {
             set { _cornerCutAllowed = value; OnPropertyChanged("CornerCutAllowed"); }
         }
 
+        public string StatPathLength {
+            get { return _statPathLength; }
+            set { _statPathLength = value; OnPropertyChanged("StatPathLength"); }
+        }
+
+        public string StatTime {
+            get { return _statTime; }
+            set { _statTime = value; OnPropertyChanged("StatTime"); }
+        }
+
+        public string StatNodesExplored {
+            get { return _statNodesExplored; }
+            set { _statNodesExplored = value; OnPropertyChanged("StatNodesExplored"); }
+        }
 
         // Commands
         public ICommand ClearAllCommand { get; }
@@ -117,17 +136,16 @@ namespace PathFinder {
         }
 
         public void StartSearch() {
-            // Don't search again if paused
-            bool searchPath = playState != PlaybackState.Paused;
+            // Only search again if the player isn't paused
+            if (playState != PlaybackState.Paused) {
+                hist.Clear(); //Clear old path
 
-            // Don't search again if path was already found
-            if (playState == PlaybackState.Restart || playState == PlaybackState.SearchComplete) {
-                hist.Reset(); // Back to start
-                searchPath = false;
-            }
-            if (searchPath) {
-                hist.Clear();
-                path = Algo(Grid.StartNode, Grid.EndNode, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed, hist);
+                // Time how long the search takes
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                path = Algo(Grid.StartNode, Grid.EndNode, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed, hist) ?? new List<Node>();
+                sw.Stop();
+                algoTime = sw.Elapsed.TotalMilliseconds;
             }
 
             playState = PlaybackState.Playing;
@@ -137,11 +155,21 @@ namespace PathFinder {
                     Thread.Sleep(4);
                     if (playState != PlaybackState.Playing) return;
                 }
+
+                // Update statistics
+                double len = 0;
+                for (int i = 0; i < path.Count - 1; ++i) {
+                    len += Heuristic.Euclidean(path[i], path[i + 1]);
+                }
+
+                StatPathLength = $"{len:f2}";
+                StatTime = $"{algoTime:f4}ms";
+                StatNodesExplored = $"{Grid.Nodes.Where(n => n.State == NodeState.Open || n.State == NodeState.Closed).ToList().Count + 2}";
+
                 playState = PlaybackState.SearchComplete;
-                if (path != null) Application.Current.Dispatcher.Invoke(() => {
+                Application.Current.Dispatcher.Invoke(() => {
                     Grid.GenPath(path);
                     CommandManager.InvalidateRequerySuggested();
-
                 });
             });
             playThread.Start();

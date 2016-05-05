@@ -66,6 +66,23 @@
                 </Grid>
             </GroupBox>
 
+            <GroupBox Header="Stats" DockPanel.Dock="Bottom">
+                <StackPanel  Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Length:" />
+                        <Label Content="{Binding StatPathLength}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Time:" />
+                        <Label Content="{Binding StatTime}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Nodes Explored:" />
+                        <Label Content="{Binding StatNodesExplored}" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
             <GroupBox Header="Search Options">
                 <StackPanel Orientation="Vertical">
                     <GroupBox Header="Algorithm">
