@@ -2,11 +2,20 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:pf="clr-namespace:PathFinder"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         Title="PathFinder" Height="600" Width="800"
         x:Name="view">
     <Window.Resources>
         <pf:RadioIsCheckedConverter x:Key="RadioIsChecked"></pf:RadioIsCheckedConverter>
         <pf:HeuristicsEnabledConverter x:Key="HeuristicsEnabledConverter"></pf:HeuristicsEnabledConverter>
+        <Style TargetType="TextBlock" x:Key="TextBlockDisable">
+            <Setter Property="Foreground" Value="Black" />
+            <Style.Triggers>
+                <Trigger Property="TextBlock.IsEnabled" Value="False">
+                    <Setter Property="TextBlock.Foreground" Value="Gray" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <DockPanel>
         <DockPanel DockPanel.Dock="Right" Background="White" Panel.ZIndex="99">
@@ -25,17 +34,36 @@
                     <Button Grid.Column="0" Content="Clear All" Command="{Binding ClearAllCommand}" />
                     <Button Grid.Column="1" Content="Clear Path" Command="{Binding ClearPathCommand}" />
                     <Button Grid.Column="2" Command="{Binding GenMazeCommand}">
-                        <TextBlock Text="Generate Maze" TextAlignment="Center" TextWrapping="Wrap" />
+                        <TextBlock Text="Generate Maze" TextAlignment="Center" 
+                                   TextWrapping="Wrap" Style="{StaticResource TextBlockDisable}" />
                     </Button>
                 </Grid>
             </GroupBox>
 
-            <GroupBox Header="Playback Controls" DockPanel.Dock="Bottom">
-                <UniformGrid Rows="1" Columns="3" Height="40" >
-                    <Button Content="Start" Command="{Binding StartCommand}" />
-                    <Button Content="Pause" Command="{Binding PauseCommand}" />
-                    <Button Content="Stop" Command="{Binding StopCommand}" />
-                </UniformGrid>
+            <GroupBox Header="Search Controls" DockPanel.Dock="Bottom">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="65" />
+                        <ColumnDefinition Width="65" />
+                        <ColumnDefinition Width="65" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Command="{Binding StartCommand}">
+                        <TextBlock Text="Start Search" TextAlignment="Center" 
+                                   TextWrapping="Wrap" Style="{StaticResource TextBlockDisable}" />
+                    </Button>
+                    <Button Grid.Column="1" Command="{Binding PauseCommand}" >
+                        <TextBlock Text="Pause Search" TextAlignment="Center" 
+                                   TextWrapping="Wrap" Style="{StaticResource TextBlockDisable}" />
+                    </Button>
+                    <Button Grid.Column="2" Command="{Binding StopCommand}" >
+                        <TextBlock Text="Cancel Search" TextAlignment="Center" 
+                                   TextWrapping="Wrap" Style="{StaticResource TextBlockDisable}" />
+                    </Button>
+                </Grid>
             </GroupBox>
 
             <GroupBox Header="Search Options">
@@ -135,6 +163,7 @@
                                    RenderTransformOrigin="0.5,0.5"
                                    Width="{x:Static pf:Node.Nodesize}"
                                    Height="{x:Static pf:Node.Nodesize}"
+                                   Fill="White"
                                    Name="nodeRect">
                             <Rectangle.RenderTransform>
                                 <TransformGroup>
@@ -142,21 +171,11 @@
                                     <TranslateTransform X="{Binding CoordX}" Y="{Binding CoordY}"></TranslateTransform>
                                 </TransformGroup>
                             </Rectangle.RenderTransform>
-
-                            <Rectangle.Style>
-                                <Style TargetType="{x:Type Rectangle}">
-                                    <Setter Property="Fill" Value="White"></Setter>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.Start}">
-                                            <Setter  Property="Fill" Value="#00FF00"></Setter>
-                                        </DataTrigger>
-
-                                        <DataTrigger Binding="{Binding State}" Value="{x:Static pf:NodeState.End}">
-                                            <Setter Property="Fill" Value="Red"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Rectangle.Style>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Loaded">
+                                    <i:InvokeCommandAction Command="{Binding UpdateColorCommand}"></i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                         </Rectangle>
                     </DataTemplate>
                 </ItemsControl.Resources>

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
@@ -53,22 +54,26 @@ namespace PathFinder {
             }
         }
 
+        public ICommand UpdateColorCommand { get; }
+
         public Node(int x, int y, NodeState state = NodeState.Empty) {
+            UpdateColorCommand = new RelayCommand(o => UpdateColor(State, false));
             X = x;
             Y = y;
             State = state;
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void UpdateColor(NodeState old) {
+        private void UpdateColor(NodeState old, bool animate = true) {
             Application.Current.Dispatcher.Invoke(() => {
                 ItemsControl ctl = (ItemsControl) Application.Current.MainWindow.FindName("ItemsCanvas");
                 if (ctl.Items.Count > 0) {
                     Rectangle rect = Util.FindDescendant<Rectangle>(ctl.ItemContainerGenerator.ContainerFromItem(this));
                     if (rect != null) {
                         ScaleTransform scale = (ScaleTransform) rect.FindName("rectScale");
-                        if (old != NodeState.Start && old != NodeState.End && State != NodeState.Start && State != NodeState.End) {
+                        if (animate && old != NodeState.Start && old != NodeState.End && State != NodeState.Start && State != NodeState.End) {
 
                             // Scaling animation for walls
                             if (State == NodeState.Wall || old == NodeState.Wall) {
