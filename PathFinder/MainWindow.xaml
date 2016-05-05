@@ -108,9 +108,6 @@
                             <RadioButton Content="Dijkstra" IsChecked="{Binding Algo, 
 								Converter={StaticResource RadioIsChecked}, 
 								ConverterParameter={x:Static pf:Algorithm.Dijkstra}}" />
-                            <RadioButton Content="Jump Point Search" IsChecked="{Binding Algo, 
-								Converter={StaticResource RadioIsChecked}, 
-								ConverterParameter={x:Static pf:Algorithm.JumpPoint}}" />
                         </StackPanel>
                     </GroupBox>
 
