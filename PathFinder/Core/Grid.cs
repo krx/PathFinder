@@ -1,40 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
-namespace PathFinder {
-    class Grid : INotifyPropertyChanged {
+namespace PathFinder.Core {
+
+    /// <summary>
+    /// A grid containing nodes and a path between them
+    /// </summary>
+    internal class Grid : NotifyPropertyChangedBase {
+
+        /// <summary>
+        /// Direct list of all nodes contained in this grid
+        /// </summary>
         private List<Node> _nodes;
-        private PointCollection _path;
-
-
-
         public List<Node> Nodes {
             get { return _nodes; }
             set { _nodes = value; OnPropertyChanged("Nodes"); }
         }
 
+        /// <summary>
+        /// Collection of points that make up the path connecting this grid's nodes
+        /// </summary>
+        private PointCollection _path;
         public PointCollection Path {
             get { return _path; }
             set { _path = value; OnPropertyChanged("Path"); }
         }
 
+        // Grid size
         public int Width { get; private set; }
         public int Height { get; private set; }
 
+        // Node accessors
         public Node StartNode => Nodes.First(n => n.State == NodeState.Start);
         public Node EndNode => Nodes.First(n => n.State == NodeState.End);
+
+        // Access any node by row/col (y/x) index
         public Node this[int row, int col] => Nodes[row * Width + col];
 
+        /// <summary>
+        /// Create a small (5x5) grid with start and end nodes by default
+        /// </summary>
         public Grid() {
             Nodes = new List<Node>();
             Path = new PointCollection();
@@ -42,15 +50,17 @@ namespace PathFinder {
 
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
+        /// <summary>
+        /// Creates a new list of nodes matching grid dimensions
+        /// </summary>
+        /// <param name="width">Width of the grid in nodes</param>
+        /// <param name="height">Height of the grid in nodes</param>
         public void InitializeGrid(int width, int height) {
+            // Set dimensions
             Width = width;
             Height = height;
+
+            //Generate the new list of nodes
             List<Node> newNodes = new List<Node>();
             for (int y = 0; y < Height; ++y) {
                 for (int x = 0; x < Width; ++x) {
@@ -60,13 +70,21 @@ namespace PathFinder {
             Nodes = newNodes;
         }
 
-        public void ResizeGrid(int width, int height) {
+        /// <summary>
+        /// Resize the grid to fit as many nodes as possible in the given pixel dimensions
+        /// </summary>
+        /// <param name="pxWidth"></param>
+        /// <param name="pxHeight"></param>
+        public void ResizeGrid(int pxWidth, int pxHeight) {
+            // Create copies of old data before regenerating the grid
             List<Node> copy = new List<Node>(Nodes);
             int oldWidth = Width, oldHeight = Height;
-            bool startCopied = false, endCopied = false;
-            InitializeGrid((width / (int) Node.Nodesize), (height / (int) Node.Nodesize));
 
-            //Copy over the previous grid state
+            // Recreate the grid with the new sizes
+            InitializeGrid((pxWidth / (int) Node.Nodesize), (pxHeight / (int) Node.Nodesize));
+
+            //Copy over the previous grid state, keeping track of start/end nodes
+            bool startCopied = false, endCopied = false;
             for (int row = 0; row < Math.Min(Height, oldHeight); ++row) {
                 for (int col = 0; col < Math.Min(Width, oldWidth); ++col) {
                     Node n = copy[row * oldWidth + col];
@@ -76,38 +94,64 @@ namespace PathFinder {
                 }
             }
 
-            //Check if the start/end nodes are missing, replace them if they are
-            if (!startCopied) this[0, this[0, 0].State == NodeState.End ? 1 : 0].State = NodeState.Start;
-            if (!endCopied) this[0, this[0, 1].State == NodeState.Start ? 0 : 1].State = NodeState.End;
+            //Check if the start/end nodes are missing, replace them as one of the first two nodes if they are
+            if (!startCopied) {
+                this[0, this[0, 0].State == NodeState.End ? 1 : 0].State = NodeState.Start;
+            }
+            if (!endCopied) {
+                this[0, this[0, 1].State == NodeState.Start ? 0 : 1].State = NodeState.End;
+            }
         }
 
+        /// <summary>
+        /// Clears the current start node and sets another node as the new start
+        /// </summary>
+        /// <param name="x">X index of the new start</param>
+        /// <param name="y">Y index of the new start</param>
         public void SetStart(int x, int y) {
-            if (Util.IsValid(x, y, this)) {
-                Node n = this[y, x];
-                if (n.State != NodeState.End && n.State != NodeState.Wall) {
-                    StartNode.State = NodeState.Empty;
-                    n.State = NodeState.Start;
-                }
-            }
+            // Validity check
+            if (!Util.IsValid(x, y, this)) return;
+
+            // Check if the desired node can be set as the start node
+            Node n = this[y, x];
+            if (n.State == NodeState.End || n.State == NodeState.Wall) return;
+
+            // Clear the old start and set the new one
+            StartNode.State = NodeState.Empty;
+            n.State = NodeState.Start;
         }
 
+        /// <summary>
+        /// Clears the current end node and sets another node as the new end
+        /// </summary>
+        /// <param name="x">X index of the new end</param>
+        /// <param name="y">Y index of the new end</param>
         public void SetEnd(int x, int y) {
-            if (Util.IsValid(x, y, this)) {
-                Node n = this[y, x];
-                if (n.State != NodeState.Start && n.State != NodeState.Wall) {
-                    EndNode.State = NodeState.Empty;
-                    n.State = NodeState.End;
-                }
-            }
+            // Validity check
+            if (!Util.IsValid(x, y, this)) return;
+
+            // Check if the desired node can be set as the end node
+            Node n = this[y, x];
+            if (n.State == NodeState.Start || n.State == NodeState.Wall) return;
+
+            // Clear the old end and set the new one
+            EndNode.State = NodeState.Empty;
+            n.State = NodeState.End;
         }
 
+        /// <summary>
+        /// Clears the path and resets all nodes to the empty state
+        /// </summary>
         public void ClearAll() {
             if (Path.Count > 0) Path = new PointCollection();
             Nodes.ToList()
-                .Where(n => n.State != NodeState.Start && n.State != NodeState.End).ToList()
+                .Where(n => n.State != NodeState.Start && n.State != NodeState.End).ToList() // Leave start/end alone
                 .ForEach(n => n.State = NodeState.Empty);
         }
 
+        /// <summary>
+        /// Clears the path and clears all open and closed nodes
+        /// </summary>
         public void ClearPath() {
             if (Path.Count > 0) Path = new PointCollection();
             Nodes.ToList()
@@ -115,6 +159,10 @@ namespace PathFinder {
                 .ForEach(n => n.State = NodeState.Empty);
         }
 
+        /// <summary>
+        /// Generates a list of path points from the bracktrace of a search
+        /// </summary>
+        /// <param name="trace"></param>
         public void GenPath(List<Node> trace) {
             Path = new PointCollection(trace.Select(n => new Point(n.CenterX, n.CenterY)));
         }

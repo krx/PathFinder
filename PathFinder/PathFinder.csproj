@@ -84,7 +84,8 @@
     <Compile Include="Core\Heuristic.cs" />
     <Compile Include="Core\History.cs" />
     <Compile Include="Core\MazeGenerator.cs" />
-    <Compile Include="Core\RelayCommand.cs" />
+    <Compile Include="NotifyPropertyChangedBase.cs" />
+    <Compile Include="RelayCommand.cs" />
     <Compile Include="Core\Util.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

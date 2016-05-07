@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace PathFinder {
+namespace PathFinder.Core {
 
+    // Delegate function definition to be used for all search algorithm functions
     delegate List<Node> AlgoFunc(Node start, Node end, Grid grid, HeuristicFunc heuristic, bool diagAllowed, bool crossDiagAllowed, History hist);
 
-    class Algorithm {
+    /// <summary>
+    /// Contains static references to all search algorithms to be used in bindings
+    /// </summary>
+    internal class Algorithm {
         public static AlgoFunc AStar = Finders.AStar.Search;
         public static AlgoFunc BreadthFirst = Finders.BreadthFirst.Search;
         public static AlgoFunc DepthFirst = Finders.DepthFirst.Search;
