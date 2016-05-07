@@ -3,7 +3,7 @@
 namespace PathFinder.Core {
 
     // Delegate function definition for all heurisitic functions
-    delegate double HeuristicFunc(Node n, Node end);
+    internal delegate double HeuristicFunc(Node n, Node end);
 
     /// <summary>
     /// Contains static references to all heuristic functions to be used in bindings

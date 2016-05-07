@@ -73,7 +73,7 @@ namespace PathFinder.Core {
     /// <summary>
     /// Helper class to contain a single step in the history
     /// </summary>
-    class NodeChange {
+    internal class NodeChange {
         public int X { get; }
         public int Y { get; }
         public NodeState NextState { get; }

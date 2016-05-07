@@ -4,7 +4,7 @@ using System.Linq;
 using PathFinder.Core;
 
 namespace PathFinder.Finders {
-    class DepthFirstRandom {
+    internal class DepthFirstRandom {
         public static List<Node> Search(Node start, Node end, Grid grid, HeuristicFunc heuristic, bool diagAllowed, bool crossDiagAllowed, History hist) {
             if (!end.IsWalkable) return null;
             List<Node> closed = new List<Node>();

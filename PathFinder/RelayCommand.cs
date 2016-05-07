@@ -7,7 +7,7 @@ namespace PathFinder {
     /// Convenience class for setting up commands
     /// Simplified version of the MVVM Light class
     /// </summary>
-    public class RelayCommand : ICommand {
+    internal class RelayCommand : ICommand {
         private readonly Action<object> execute;
         private readonly Func<object, bool> canExecute;
 

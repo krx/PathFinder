@@ -3,7 +3,7 @@
 namespace PathFinder.Core {
 
     // Delegate function definition to be used for all search algorithm functions
-    delegate List<Node> AlgoFunc(Node start, Node end, Grid grid, HeuristicFunc heuristic, bool diagAllowed, bool crossDiagAllowed, History hist);
+    internal delegate List<Node> AlgoFunc(Node start, Node end, Grid grid, HeuristicFunc heuristic, bool diagAllowed, bool crossDiagAllowed, History hist);
 
     /// <summary>
     /// Contains static references to all search algorithms to be used in bindings
