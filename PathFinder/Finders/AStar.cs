@@ -20,7 +20,7 @@ namespace PathFinder.Finders {
                 if (current.IsEnd) return Util.Backtrace(current);
                 hist.Push(current, NodeState.Closed);
 
-                foreach (Node neighbor in Util.GetNeighbors(current, grid, diagAllowed, crossDiagAllowed).Where(n => !closed.Contains(n))) {
+                foreach (Node neighbor in Util.GetNeighbors(current, grid, diagAllowed, crossDiagAllowed).Except(closed)) {
                     double ng = current.GScore + gFunc(current, neighbor);
                     if (!open.Contains(neighbor) || ng < neighbor.GScore) {
                         neighbor.GScore = ng;

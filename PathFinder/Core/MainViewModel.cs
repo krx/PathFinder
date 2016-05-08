@@ -218,7 +218,7 @@ namespace PathFinder.Core {
                 // Update stat strings
                 StatPathLength = $"{len:f2}";
                 StatTime = $"{algoTime:f4}ms";
-                StatNodesExplored = $"{Grid.Nodes.Where(n => n.State == NodeState.Open || n.State == NodeState.Closed).ToList().Count + 2}";
+                StatNodesExplored = $"{Grid.Nodes.Count(n => n.IsOpen || n.IsClosed) + 2}"; // +2 for start and end
 
                 playState = PlaybackState.SearchComplete;
                 Application.Current.Dispatcher.Invoke(() => {
