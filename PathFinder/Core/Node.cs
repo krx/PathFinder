@@ -62,6 +62,8 @@ namespace PathFinder.Core {
         public bool IsWalkable => State != NodeState.Wall;
         public bool IsStart => State == NodeState.Start;
         public bool IsEnd => State == NodeState.End;
+        public bool IsClosed => State == NodeState.Closed;
+        public bool IsOpen => State == NodeState.Open;
 
         /// <summary>
         /// The current state of this node
@@ -143,9 +145,10 @@ namespace PathFinder.Core {
         }
 
         /// <summary>
-        /// Zeros out all of this node's scores
+        /// Zeros out all of this node's scores and resets its parent
         /// </summary>
-        public void ClearScores() {
+        public void Reset() {
+            Parent = null;
             GScore = HScore = 0;
         }
 

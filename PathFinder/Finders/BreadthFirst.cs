@@ -15,13 +15,11 @@ namespace PathFinder.Finders {
                 if (current.IsEnd) return Util.Backtrace(current);
                 hist.Push(current, NodeState.Closed);
 
-                Util.GetNeighbors(current, grid, diagAllowed, crossDiagAllowed)
-                    .Where(n => !closed.Contains(n) && !open.Contains(n)).ToList()
-                    .ForEach(neighbor => {
-                        open.Add(neighbor);
-                        hist.Push(neighbor, NodeState.Open);
-                        neighbor.Parent = current;
-                    });
+                foreach (Node neighbor in Util.GetNeighbors(current, grid, diagAllowed, crossDiagAllowed).Except(closed).Except(open)) {
+                    open.Add(neighbor);
+                    hist.Push(neighbor, NodeState.Open);
+                    neighbor.Parent = current;
+                }
             }
             return new List<Node>();
         }

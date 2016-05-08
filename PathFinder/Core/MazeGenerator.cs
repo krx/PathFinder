@@ -20,9 +20,9 @@ namespace PathFinder.Core {
         /// <param name="hist">History to record the state changes to</param>
         public static void Generate(Grid grid, History hist) {
             // Fill the grid with walls
-            grid.Nodes
-                .Where(n => n.State != NodeState.Start && n.State != NodeState.End).ToList()
-                .ForEach(n => n.State = NodeState.Wall);
+            foreach (Node n in grid.Nodes.Where(n => !n.IsStart && !n.IsEnd)) {
+                n.State = NodeState.Wall;
+            }
 
             // Start with a random node
             Node current = RandomNode(grid, new List<Node>());

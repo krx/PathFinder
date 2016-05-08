@@ -144,12 +144,10 @@ namespace PathFinder.Core {
         /// </summary>
         public void ClearAll() {
             if (Path.Count > 0) Path = new PointCollection();
-            Nodes.ToList()
-                .Where(n => n.State != NodeState.Start && n.State != NodeState.End).ToList() // Leave start/end alone
-                .ForEach(n => {
-                    n.State = NodeState.Empty;
-                    n.ClearScores();
-                });
+            foreach (Node n in Nodes.Where(n => !n.IsStart && !n.IsEnd)) {
+                n.State = NodeState.Empty;
+                n.Reset();
+            }
         }
 
         /// <summary>
@@ -157,12 +155,10 @@ namespace PathFinder.Core {
         /// </summary>
         public void ClearPath() {
             if (Path.Count > 0) Path = new PointCollection();
-            Nodes.ToList()
-                .Where(n => n.State == NodeState.Open || n.State == NodeState.Closed).ToList()
-                .ForEach(n => {
-                    n.State = NodeState.Empty;
-                    n.ClearScores();
-                });
+            foreach (Node n in Nodes.Where(n => n.IsOpen || n.IsClosed)) {
+                n.State = NodeState.Empty;
+                n.Reset();
+            }
         }
 
         /// <summary>

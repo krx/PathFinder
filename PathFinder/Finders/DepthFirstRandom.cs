@@ -16,11 +16,11 @@ namespace PathFinder.Finders {
                     hist.Push(current, NodeState.Closed);
                 }
 
-                List<Node> neighbors = Util.GetNeighbors(current, grid, diagAllowed, crossDiagAllowed).Where(n => !closed.Contains(n)).ToList();
-                neighbors.ForEach(neighbor => {
+                List<Node> neighbors = Util.GetNeighbors(current, grid, diagAllowed, crossDiagAllowed).Except(closed).ToList();
+                foreach (Node neighbor in neighbors) {
                     neighbor.Parent = current;
                     hist.Push(neighbor, NodeState.Open);
-                });
+                }
                 current = neighbors.Count > 0 ? Util.GetRandomElement(neighbors) : current.Parent;
             }
             return new List<Node>();
