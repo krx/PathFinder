@@ -48,5 +48,9 @@ namespace PathFinder {
             resizeTimer.Stop();
             resizeTimer.Start();
         }
+
+        private void About_Click(object sender, RoutedEventArgs e) {
+            new AboutWindow(this).ShowDialog();
+        }
     }
 }

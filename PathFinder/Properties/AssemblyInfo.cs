@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("PathFinder")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Kareem El-Faramawi")]
 [assembly: AssemblyProduct("PathFinder")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCopyright("Copyright © 2016 Kareem El-Faramawi")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

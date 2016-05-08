@@ -1,0 +1,30 @@
+﻿<Window x:Class="PathFinder.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStartupLocation="CenterOwner"
+        Title="About PathFinder" Height="200" Width="300"
+        Icon="Images\pathicon.ico">
+    <DockPanel Margin="10">
+        <DockPanel DockPanel.Dock="Bottom">
+            <TextBlock DockPanel.Dock="Left">
+                <Hyperlink NavigateUri="https://github.com/krx/PathFinder" 
+                           TextDecorations="None"
+                           RequestNavigate="Hyperlink_OnRequestNavigate">
+                    <Image Source="Images/GitHub-Mark-32px.png" Width="32" Height="32" />
+                </Hyperlink>
+            </TextBlock>
+
+            <Button Content="Close" HorizontalAlignment="Right" FontSize="16" 
+                    VerticalAlignment="Bottom" Click="Close_Click"/>
+        </DockPanel>
+
+        <StackPanel Orientation="Vertical" >
+            <Label FontWeight="Bold" FontSize="16" Content="PathFinder" />
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Version:" />
+                <Label Content="{Binding Version}"/>
+            </StackPanel>
+            <Label Content="{Binding Copyright}"/>
+        </StackPanel>
+    </DockPanel>
+</Window>

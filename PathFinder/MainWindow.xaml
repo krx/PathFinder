@@ -4,7 +4,7 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:core="clr-namespace:PathFinder.Core"
         Title="PathFinder" Height="600" Width="800"
-        x:Name="view">
+        Icon="Images/pathicon.ico">
 
     <Window.Resources>
         <core:RadioIsCheckedConverter x:Key="RadioIsChecked"></core:RadioIsCheckedConverter>
@@ -21,6 +21,13 @@
 
     <DockPanel>
         <DockPanel DockPanel.Dock="Right" Background="White" Panel.ZIndex="99">
+
+
+            <Grid DockPanel.Dock="Bottom">
+                <Button Margin="0,3,6,3" Padding="2" 
+                        HorizontalAlignment="Right" Content="About"
+                        Click="About_Click" />
+            </Grid>
 
             <GroupBox Header="Grid Controls" DockPanel.Dock="Bottom">
                 <Grid>
