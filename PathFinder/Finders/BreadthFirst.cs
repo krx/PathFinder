@@ -23,7 +23,7 @@ namespace PathFinder.Finders {
                         neighbor.Parent = current;
                     });
             }
-            return null;
+            return new List<Node>();
         }
     }
 }

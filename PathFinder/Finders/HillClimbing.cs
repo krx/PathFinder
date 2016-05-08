@@ -27,7 +27,7 @@ namespace PathFinder.Finders {
                 neighbors.Sort();
                 current = neighbors.Count > 0 ? neighbors[0] : current.Parent;
             }
-            return null;
+            return new List<Node>();
         }
     }
 }

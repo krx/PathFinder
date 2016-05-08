@@ -37,7 +37,7 @@ namespace PathFinder.Finders {
                     });
                 open.Sort();
             }
-            return null;
+            return new List<Node>();
         }
     }
 }

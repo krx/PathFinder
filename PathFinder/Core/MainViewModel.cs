@@ -186,7 +186,7 @@ namespace PathFinder.Core {
                 // Time how long the search takes
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
-                path = Algo(Grid.StartNode, Grid.EndNode, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed, hist) ?? new List<Node>();
+                path = Algo(Grid.StartNode, Grid.EndNode, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed, hist);
                 sw.Stop();
 
                 // Record search time
