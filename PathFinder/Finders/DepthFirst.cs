@@ -11,8 +11,10 @@ namespace PathFinder.Finders {
             while (current != null) {
                 if (current.IsEnd) return Util.Backtrace(current);
 
-                closed.Add(current);
-                hist.Push(current, NodeState.Closed);
+                if (!closed.Contains(current)) {
+                    closed.Add(current);
+                    hist.Push(current, NodeState.Closed);
+                }
 
                 List<Node> neighbors = Util.GetNeighbors(current, grid, diagAllowed, crossDiagAllowed).Where(n => !closed.Contains(n)).ToList();
                 neighbors.ForEach(neighbor => {

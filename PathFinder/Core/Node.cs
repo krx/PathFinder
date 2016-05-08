@@ -19,7 +19,7 @@ namespace PathFinder.Core {
     /// <summary>
     /// An element/cell of the grid
     /// </summary>
-    internal class Node : NotifyPropertyChangedBase, ICloneable, IComparable {
+    internal class Node : NotifyPropertyChangedBase, ICloneable, IComparable<Node>, IEquatable<Node> {
 
         // Global visual size of a node
         public static readonly double Nodesize = 30;
@@ -157,21 +157,19 @@ namespace PathFinder.Core {
         /// <summary>
         /// Compares this node to another based on the F-Scores
         /// </summary>
-        /// <param name="o">Other node being compared</param>
+        /// <param name="n">Other node being compared</param>
         /// <returns>A number to show if this node is less than, greater than, or the same as the other</returns>
-        public int CompareTo(object o) {
-            return FScore.CompareTo(((Node) o).FScore);
+        public int CompareTo(Node n) {
+            return FScore.CompareTo(n.FScore);
         }
 
         /// <summary>
         /// Checks if two nodes are the same on a grid
         /// </summary>
-        /// <param name="other">Other node being compared</param>
+        /// <param name="n">Other node being compared</param>
         /// <returns>If the two nodes have the same grid indices</returns>
-        public override bool Equals(object other) {
-            Node n = other as Node;
-            if (n != null) return X == n.X && Y == n.Y;
-            return base.Equals(other);
+        public bool Equals(Node n) {
+            return X == n.X && Y == n.Y;
         }
     }
 }
