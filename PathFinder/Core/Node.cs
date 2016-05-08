@@ -58,8 +58,10 @@ namespace PathFinder.Core {
         // The parent of this node used for bracktracing
         public Node Parent { get; set; }
 
-        // Property to check if this node can be walked on
+        // Shorthand properties for states
         public bool IsWalkable => State != NodeState.Wall;
+        public bool IsStart => State == NodeState.Start;
+        public bool IsEnd => State == NodeState.End;
 
         /// <summary>
         /// The current state of this node

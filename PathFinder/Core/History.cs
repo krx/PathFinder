@@ -30,6 +30,7 @@ namespace PathFinder.Core {
         /// <param name="n">Affected node</param>
         /// <param name="next">The new state of the node</param>
         public void Push(Node n, NodeState next) {
+            if (n.IsStart || n.IsEnd) return;
             changes.Add(new NodeChange(n.X, n.Y, next));
         }
 

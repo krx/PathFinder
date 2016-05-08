@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
@@ -8,7 +9,7 @@ namespace PathFinder.Core {
     /// <summary>
     /// Helpful utitiliy functions used throughout the program
     /// </summary>
-    internal class Util {
+    internal static class Util {
         private static readonly Random rnd = new Random();
 
         /// <summary>
@@ -20,6 +21,19 @@ namespace PathFinder.Core {
         public static T GetRandomElement<T>(IList<T> list) {
             if (list.Count == 0) throw new InvalidOperationException("Cannot get an element of an empty list");
             return list[rnd.Next(list.Count)];
+        }
+
+        /// <summary>
+        /// Extension method for collections that removes and returns the first element
+        /// </summary>
+        /// <typeparam name="T">Type of element contained in the collection</typeparam>
+        /// <param name="list">The list</param>
+        /// <returns>First element of the list that was removed</returns>
+        public static T PopFirst<T>(this ICollection<T> list) {
+            if (list == null || list.Count == 0) throw new InvalidOperationException("No elements in list");
+            T val = list.First();
+            list.Remove(val);
+            return val;
         }
 
         /// <summary>
