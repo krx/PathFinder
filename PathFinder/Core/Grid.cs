@@ -57,8 +57,8 @@ namespace PathFinder.Core {
         /// <param name="height">Height of the grid in nodes</param>
         public void InitializeGrid(int width, int height) {
             // Set dimensions
-            Width = width;
-            Height = height;
+            Width = Math.Max(width, 2);
+            Height = Math.Max(height, 2);
 
             //Generate the new list of nodes
             List<Node> newNodes = new List<Node>();
@@ -90,7 +90,7 @@ namespace PathFinder.Core {
                     Node n = copy[row * oldWidth + col];
                     if (n.State == NodeState.Start) startCopied = true;
                     if (n.State == NodeState.End) endCopied = true;
-                    this[row, col].State = n.State;
+                    Nodes[row * Width + col] = n;
                 }
             }
 
