@@ -15,6 +15,10 @@ namespace PathFinder.Core {
         // Current index in the history
         private int idx = 0;
 
+        // Properties about current index
+        public bool AtBeginning => idx <= 0;
+        public bool AtEnd => idx >= changes.Count;
+
         /// <summary>
         /// Create a blank history
         /// </summary>
@@ -62,11 +66,26 @@ namespace PathFinder.Core {
         /// <returns>True if a step was taken</returns>
         public bool Step() {
             // Quit if the end has already been reached
-            if (idx >= changes.Count) return false;
+            if (AtEnd) return false;
 
-            // Load the state change and apply it to the grid
+            // Load the state change
             NodeChange nc = changes[idx++];
+
+            // Save the current state of the node for stepping backwards
+            nc.PrevState = grid[nc.Y, nc.X].State;
+
+            // Apply the state change to the grid
             grid[nc.Y, nc.X].State = nc.NextState;
+            return true;
+        }
+
+        public bool StepBack() {
+            // Quit if the beginning has already been reached
+            if (AtBeginning) return false;
+
+            // Step back once and revert the state of the node
+            NodeChange nc = changes[--idx];
+            grid[nc.Y, nc.X].State = nc.PrevState;
             return true;
         }
     }
@@ -78,6 +97,7 @@ namespace PathFinder.Core {
         public int X { get; }
         public int Y { get; }
         public NodeState NextState { get; }
+        public NodeState PrevState { get; set; }
 
         public NodeChange(int x, int y, NodeState nextState) {
             X = x;

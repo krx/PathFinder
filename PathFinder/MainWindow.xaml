@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:core="clr-namespace:PathFinder.Core"
-        Title="PathFinder" Height="600" Width="800"
+        Title="PathFinder" MinHeight="650" Height="650" Width="800"
         Icon="Images/pathicon.ico">
 
     <Window.Resources>
@@ -50,29 +50,53 @@
             </GroupBox>
 
             <GroupBox Header="Search Controls" DockPanel.Dock="Bottom">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="65" />
-                        <ColumnDefinition Width="65" />
-                        <ColumnDefinition Width="65" />
-                    </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Vertical">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="65" />
+                            <ColumnDefinition Width="65" />
+                            <ColumnDefinition Width="65" />
+                        </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" Command="{Binding StartCommand}">
-                        <TextBlock Text="Start Search" TextAlignment="Center" 
+                        <Button Grid.Column="0" Command="{Binding PlayCommand}">
+                            <TextBlock Text="Play  Search" TextAlignment="Center" 
                                    TextWrapping="Wrap" Style="{StaticResource TextBlockDisable}" />
-                    </Button>
-                    <Button Grid.Column="1" Command="{Binding PauseCommand}" >
-                        <TextBlock Text="Pause Search" TextAlignment="Center" 
+                        </Button>
+                        <Button Grid.Column="1" Command="{Binding PauseCommand}" >
+                            <TextBlock Text="Pause Search" TextAlignment="Center" 
                                    TextWrapping="Wrap" Style="{StaticResource TextBlockDisable}" />
-                    </Button>
-                    <Button Grid.Column="2" Command="{Binding StopCommand}" >
-                        <TextBlock Text="Cancel Search" TextAlignment="Center" 
+                        </Button>
+                        <Button Grid.Column="2" Command="{Binding StopCommand}" >
+                            <TextBlock Text="Cancel Search" TextAlignment="Center" 
                                    TextWrapping="Wrap" Style="{StaticResource TextBlockDisable}" />
-                    </Button>
-                </Grid>
+                        </Button>
+                    </Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0" Command="{Binding StepBackwardCommand}" >
+                            <TextBlock Text="Step Backward" TextAlignment="Center" 
+                                   TextWrapping="Wrap" Style="{StaticResource TextBlockDisable}" />
+                        </Button>
+                        <Button Grid.Column="1" Command="{Binding StepForwardCommand}" >
+                            <TextBlock Text="Step Forward" TextAlignment="Center" 
+                                   TextWrapping="Wrap" Style="{StaticResource TextBlockDisable}" />
+                        </Button>
+                    </Grid>
+                    <Label Content="Animation Speed:"/>
+                    <Slider Minimum="0" Maximum="30"
+                            IsSnapToTickEnabled="True" IsDirectionReversed="True" 
+                            Value="{Binding AnimSleepTime}"/>
+                </StackPanel>
             </GroupBox>
 
             <GroupBox Header="Stats" DockPanel.Dock="Bottom">

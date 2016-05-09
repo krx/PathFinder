@@ -22,31 +22,51 @@ namespace PathFinder.Core {
     /// Main display controls for the pathfinder
     /// </summary>
     internal class MainViewModel : NotifyPropertyChangedBase {
+        // Backing variables
+        private volatile int _animSleepTime;
+        private AlgoFunc _algorithm;
+        private HeuristicFunc _heuristic;
+        private bool _diagonalsAllowed;
+        private bool _cornerCutAllowed;
+        private string _statPathLength;
+        private string _statTime;
+        private string _statNodesExplored;
 
         // Current node indices the moust is hovering over
         private int mouseXIdx;
         private int mouseYIdx;
 
+
         // The state that will be painted as the mouse is dragged
         private NodeState dropType = NodeState.Empty;
 
+        // Search results
+        private List<Node> path;
+        private double pathLength;
+        private double algoTime;
 
         // Search playback
         private History hist;
         private volatile PlaybackState playState = PlaybackState.Modified;
         private Thread playThread;
 
-        // Search results
-        private List<Node> path;
-        private double algoTime;
 
-        // Grid containing all nodes
+        /// <summary>
+        /// Grid containing all nodes
+        /// </summary>
         public Grid Grid { get; }
+
+        /// <summary>
+        /// Number of milliseconds between every step in the playback animation
+        /// </summary>
+        public int AnimSleepTime {
+            get { return _animSleepTime; }
+            set { _animSleepTime = value; OnPropertyChanged("AnimSleepTime"); }
+        }
 
         /// <summary>
         /// The algoritm that will be called to find the path
         /// </summary>
-        private AlgoFunc _algorithm;
         public AlgoFunc Algo {
             get { return _algorithm; }
             set {
@@ -59,7 +79,6 @@ namespace PathFinder.Core {
         /// <summary>
         /// The heuristic function that will be used by the selected search algorithm
         /// </summary>
-        private HeuristicFunc _heuristic;
         public HeuristicFunc HeuristicFunction {
             get { return _heuristic; }
             set {
@@ -72,7 +91,6 @@ namespace PathFinder.Core {
         /// <summary>
         /// Whether the path is allowed to use diagonals at all
         /// </summary>
-        private bool _diagonalsAllowed;
         public bool DiagonalsAllowed {
             get { return _diagonalsAllowed; }
             set { _diagonalsAllowed = value; OnPropertyChanged("DiagonalsAllowed"); }
@@ -82,7 +100,6 @@ namespace PathFinder.Core {
         /// <summary>
         /// Wether the diagonals in the path can cross the corner of a wall
         /// </summary>
-        private bool _cornerCutAllowed;
         public bool CornerCutAllowed {
             get { return _cornerCutAllowed; }
             set { _cornerCutAllowed = value; OnPropertyChanged("CornerCutAllowed"); }
@@ -91,7 +108,6 @@ namespace PathFinder.Core {
         /// <summary>
         /// Result string for the path length
         /// </summary>
-        private string _statPathLength;
         public string StatPathLength {
             get { return _statPathLength; }
             set { _statPathLength = value; OnPropertyChanged("StatPathLength"); }
@@ -100,7 +116,6 @@ namespace PathFinder.Core {
         /// <summary>
         /// Result string for the search time
         /// </summary>
-        private string _statTime;
         public string StatTime {
             get { return _statTime; }
             set { _statTime = value; OnPropertyChanged("StatTime"); }
@@ -109,19 +124,20 @@ namespace PathFinder.Core {
         /// <summary>
         /// Result string for the number of nodes explored in the search
         /// </summary>
-        private string _statNodesExplored;
         public string StatNodesExplored {
             get { return _statNodesExplored; }
             set { _statNodesExplored = value; OnPropertyChanged("StatNodesExplored"); }
         }
 
         // Button Commands
+        public ICommand PlayCommand { get; }
+        public ICommand PauseCommand { get; }
+        public ICommand StopCommand { get; }
+        public ICommand StepBackwardCommand { get; }
+        public ICommand StepForwardCommand { get; }
         public ICommand ClearAllCommand { get; }
         public ICommand ClearPathCommand { get; }
         public ICommand GenMazeCommand { get; }
-        public ICommand StartCommand { get; }
-        public ICommand PauseCommand { get; }
-        public ICommand StopCommand { get; }
 
         public MainViewModel() {
             Grid = new Grid();
@@ -132,10 +148,11 @@ namespace PathFinder.Core {
             HeuristicFunction = Heuristic.Manhattan;
             DiagonalsAllowed = true;
             CornerCutAllowed = true;
+            AnimSleepTime = 4;
 
             // Playback commands
-            StartCommand = new RelayCommand(
-                o => StartSearch(),
+            PlayCommand = new RelayCommand(
+                o => PlaySearch(),
                 o => playState != PlaybackState.GeneratingMaze);
 
             PauseCommand = new RelayCommand(
@@ -149,10 +166,19 @@ namespace PathFinder.Core {
                 },
                 o => playState == PlaybackState.Paused);
 
+            StepForwardCommand = new RelayCommand(
+                o => StepForward(),
+                o => playState != PlaybackState.GeneratingMaze);
+
+            StepBackwardCommand = new RelayCommand(
+                o => StepBackward(),
+                o => playState != PlaybackState.GeneratingMaze);
+
             // Grid control commands
             ClearAllCommand = new RelayCommand(
                 o => {
                     playState = PlaybackState.Modified;
+                    hist.Clear(false);
                     Grid.ClearAll();
                 },
                 o => CanModify());
@@ -160,7 +186,7 @@ namespace PathFinder.Core {
             ClearPathCommand = new RelayCommand(
                 o => {
                     playState = PlaybackState.Modified;
-                    Grid.ClearPath();
+                    hist.Clear();
                 },
                 o => CanModify());
 
@@ -175,23 +201,45 @@ namespace PathFinder.Core {
             return (playState == PlaybackState.Modified || playState == PlaybackState.SearchComplete) && playState != PlaybackState.GeneratingMaze;
         }
 
+        public void UpdateStats() {
+            // Update stat strings
+            StatPathLength = $"{pathLength:f2}";
+            StatTime = $"{algoTime:f4}ms";
+            StatNodesExplored = $"{Grid.Nodes.Count(n => n.IsOpen || n.IsClosed) + 2}"; // +2 for start and end
+        }
+
         /// <summary>
-        /// Starts the search for a path between the start and end nodes
+        /// Recalculates the path if it has not already been found
         /// </summary>
-        public void StartSearch() {
-            // Only search again if the player isn't paused
-            if (playState != PlaybackState.Paused) {
-                hist.Clear(); //Clear old path
+        public void CalculatePath() {
+            // Don't recalculate if the animation is currently paused
+            if (playState == PlaybackState.Paused) return;
 
-                // Time how long the search takes
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
-                path = Algo(Grid.StartNode, Grid.EndNode, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed, hist);
-                sw.Stop();
+            // Clear old path
+            hist.Clear();
 
-                // Record search time
-                algoTime = sw.Elapsed.TotalMilliseconds;
+            // Time how long the search takes
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            path = Algo(Grid.StartNode, Grid.EndNode, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed, hist);
+            sw.Stop();
+
+            // Record search time
+            algoTime = sw.Elapsed.TotalMilliseconds;
+
+            // Calculate path length
+            pathLength = 0;
+            for (int i = 0; i < path.Count - 1; ++i) {
+                pathLength += Heuristic.Euclidean(path[i], path[i + 1]);
             }
+        }
+
+        /// <summary>
+        /// Plays the search animation for a path between the start and end nodes
+        /// </summary>
+        public void PlaySearch() {
+            // Recalculate if needed
+            CalculatePath();
 
             // Update the playback state and kill any old threads
             playState = PlaybackState.Playing;
@@ -201,7 +249,7 @@ namespace PathFinder.Core {
             playThread = new Thread(() => {
                 // Keep stepping through history until the end is reached
                 while (hist.Step()) {
-                    Thread.Sleep(4);
+                    Thread.Sleep(AnimSleepTime);
 
                     // If at any point the playback state changes, exit the thread
                     if (playState != PlaybackState.Playing) {
@@ -210,15 +258,7 @@ namespace PathFinder.Core {
                 }
 
                 // Update statistics
-                double len = 0;
-                for (int i = 0; i < path.Count - 1; ++i) {
-                    len += Heuristic.Euclidean(path[i], path[i + 1]);
-                }
-
-                // Update stat strings
-                StatPathLength = $"{len:f2}";
-                StatTime = $"{algoTime:f4}ms";
-                StatNodesExplored = $"{Grid.Nodes.Count(n => n.IsOpen || n.IsClosed) + 2}"; // +2 for start and end
+                UpdateStats();
 
                 playState = PlaybackState.SearchComplete;
                 Application.Current.Dispatcher.Invoke(() => {
@@ -230,6 +270,56 @@ namespace PathFinder.Core {
                 });
             });
             playThread.Start();
+        }
+
+        /// <summary>
+        /// Take one step forward in the animation
+        /// If the end is reached it will loop again (recalculating the path)
+        /// </summary>
+        public void StepForward() {
+            // Stop the animation if it is currently running
+            if (playState == PlaybackState.Playing) {
+                playState = PlaybackState.Paused;
+            }
+
+            // If the end of the animation has been reached, draw the path and update display
+            if (hist.AtEnd) {
+                // Update display
+                UpdateStats();
+                Grid.GenPath(path);
+
+                // Update playback state
+                playState = PlaybackState.SearchComplete;
+
+                // Force commands to update
+                CommandManager.InvalidateRequerySuggested();
+            } else {
+                // Recalculate if needed
+                CalculatePath();
+
+                //Step once
+                hist.Step();
+                playState = PlaybackState.Paused;
+            }
+        }
+
+        /// <summary>
+        /// Take one step backwards in the animation, stops when the beginning is reached
+        /// </summary>
+        public void StepBackward() {
+            if (hist.AtEnd) {
+                // Clear the visual path
+                Grid.GenPath(new List<Node>());
+            }
+
+            // Step back once
+            hist.StepBack();
+            playState = PlaybackState.Paused;
+
+            // When the beginning is hit, return the grid to a usable state
+            if (hist.AtBeginning) {
+                playState = PlaybackState.Modified;
+            }
         }
 
         /// <summary>
@@ -248,7 +338,7 @@ namespace PathFinder.Core {
 
                 // Step through history to animate creation
                 while (hist.Step()) {
-                    Thread.Sleep(4);
+                    Thread.Sleep(AnimSleepTime);
                 }
                 playState = PlaybackState.Modified;
 
