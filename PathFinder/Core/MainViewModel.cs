@@ -359,7 +359,7 @@ namespace PathFinder.Core {
 
             // Set the type if the node isn't the start or end
             Node n = Grid[mouseYIdx, mouseXIdx];
-            if (n.State != NodeState.Start && n.State != NodeState.End) {
+            if (!n.IsStart && !n.IsEnd) {
                 n.State = dropType;
             }
         }

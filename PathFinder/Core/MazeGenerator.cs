@@ -45,7 +45,7 @@ namespace PathFinder.Core {
                     // Clear the wall between the current node and the neighbor
                     int midX = (current.X + neighbor.X) / 2,
                         midY = (current.Y + neighbor.Y) / 2;
-                    if (grid[midY, midX].State == NodeState.Wall) {
+                    if (grid[midY, midX].IsWall) {
                         hist.Push(grid[midY, midX], NodeState.Empty);
                     }
 
@@ -63,7 +63,7 @@ namespace PathFinder.Core {
                 }
 
                 // Clear the current node if it's a wall
-                if (current.State == NodeState.Wall) {
+                if (current.IsWall) {
                     hist.Push(current, NodeState.Empty);
                 }
             }

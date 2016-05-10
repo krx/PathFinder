@@ -43,12 +43,12 @@ namespace PathFinder.Core {
         /// <summary>
         /// Finds and returns the start Node
         /// </summary>
-        public Node StartNode => Nodes.First(n => n.State == NodeState.Start);
+        public Node StartNode => Nodes.First(n => n.IsStart);
 
         /// <summary>
         /// Finds and returns the end Node
         /// </summary>
-        public Node EndNode => Nodes.First(n => n.State == NodeState.End);
+        public Node EndNode => Nodes.First(n => n.IsEnd);
 
         /// <summary>
         /// Allows read access to any Node by row/col (y/x) indexing
@@ -106,18 +106,18 @@ namespace PathFinder.Core {
             for (int row = 0; row < Math.Min(Height, oldHeight); ++row) {
                 for (int col = 0; col < Math.Min(Width, oldWidth); ++col) {
                     Node n = copy[row * oldWidth + col];
-                    if (n.State == NodeState.Start) startCopied = true;
-                    if (n.State == NodeState.End) endCopied = true;
+                    if (n.IsStart) startCopied = true;
+                    if (n.IsEnd) endCopied = true;
                     Nodes[row * Width + col] = n;
                 }
             }
 
             // Check if the start/end nodes are missing, replace them as one of the first two nodes if they are
             if (!startCopied) {
-                this[0, this[0, 0].State == NodeState.End ? 1 : 0].State = NodeState.Start;
+                this[0, this[0, 0].IsEnd ? 1 : 0].State = NodeState.Start;
             }
             if (!endCopied) {
-                this[0, this[0, 1].State == NodeState.Start ? 0 : 1].State = NodeState.End;
+                this[0, this[0, 1].IsStart ? 0 : 1].State = NodeState.End;
             }
         }
 
@@ -132,7 +132,7 @@ namespace PathFinder.Core {
 
             // Check if the desired node can be set as the start node
             Node n = this[y, x];
-            if (n.State == NodeState.End || n.State == NodeState.Wall) return;
+            if (n.IsEnd || n.IsWall) return;
 
             // Clear the old start and set the new one
             StartNode.State = NodeState.Empty;
@@ -150,7 +150,7 @@ namespace PathFinder.Core {
 
             // Check if the desired node can be set as the end node
             Node n = this[y, x];
-            if (n.State == NodeState.Start || n.State == NodeState.Wall) return;
+            if (n.IsStart || n.IsWall) return;
 
             // Clear the old end and set the new one
             EndNode.State = NodeState.Empty;

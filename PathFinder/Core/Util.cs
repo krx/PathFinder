@@ -56,7 +56,7 @@ namespace PathFinder.Core {
         /// <param name="grid">Grid to check the point in</param>
         /// <returns></returns>
         public static bool IsWalkableAt(int x, int y, Grid grid) {
-            return IsValid(x, y, grid) && grid[y, x].IsWalkable;
+            return IsValid(x, y, grid) && !grid[y, x].IsWall;
         }
 
         /// <summary>

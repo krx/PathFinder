@@ -131,7 +131,7 @@ namespace PathFinder.Core {
         public Node Parent { get; set; }
 
         // Shorthand properties for states
-        public bool IsWalkable => State != NodeState.Wall;
+        public bool IsWall => State == NodeState.Wall;
         public bool IsStart => State == NodeState.Start;
         public bool IsEnd => State == NodeState.End;
         public bool IsClosed => State == NodeState.Closed;
