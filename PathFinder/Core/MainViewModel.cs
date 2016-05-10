@@ -63,7 +63,7 @@ namespace PathFinder.Core {
         }
 
         /// <summary>
-        /// The algoritm that will be called to find the path
+        /// The algorithm that will be called to find the path
         /// </summary>
         public AlgoFunc Algo {
             get { return _algorithm; }
@@ -95,7 +95,7 @@ namespace PathFinder.Core {
         }
 
         /// <summary>
-        /// Wether the diagonals in the path can cross the corner of a wall
+        /// Whether the diagonals in the path can cross the corner of a wall
         /// </summary>
         public bool CornerCutAllowed {
             get { return _cornerCutAllowed; }

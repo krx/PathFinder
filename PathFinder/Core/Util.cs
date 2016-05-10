@@ -7,7 +7,7 @@ using System.Windows.Media;
 namespace PathFinder.Core {
 
     /// <summary>
-    /// Helpful utitiliy functions used throughout the program
+    /// Helpful utility functions used throughout the program
     /// </summary>
     internal static class Util {
         private static readonly Random Rand = new Random();
@@ -60,7 +60,7 @@ namespace PathFinder.Core {
         }
 
         /// <summary>
-        /// Traces and collect a chain of parents until the start node is reached
+        /// Traces and collects a chain of parents until the start node is reached
         /// </summary>
         /// <param name="node">Node to begin tracing from</param>
         /// <returns>List of all nodes in the chain, starting form the Start node</returns>
@@ -178,7 +178,7 @@ namespace PathFinder.Core {
                 }
             }
 
-            // Then check the childrens children
+            // Then check the children's children
             for (int i = 0; i < childCount; i++) {
                 DependencyObject child = FindDescendant<T>(VisualTreeHelper.GetChild(root, i));
                 // If anything was returned, the child was found

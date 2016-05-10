@@ -8,7 +8,7 @@ namespace PathFinder {
     /// Interaction logic for AboutWindow.xaml
     /// </summary>
     public partial class AboutWindow {
-        // Load this program's assembly informaiton
+        // Load this program's assembly information
         private Assembly app = Assembly.GetExecutingAssembly();
 
         // Load information strings as properties

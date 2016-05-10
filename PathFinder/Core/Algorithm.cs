@@ -8,7 +8,7 @@ namespace PathFinder.Core {
     /// <param name="start">The starting Node in the Grid</param>
     /// <param name="end">The ending Node in the Grid</param>
     /// <param name="grid">The Grid containing everything</param>
-    /// <param name="heuristic">Heurisitc function to use for scoring Nodes</param>
+    /// <param name="heuristic">Heuristic function to use for scoring Nodes</param>
     /// <param name="diagAllowed">Whether diagonal movement is allowed</param>
     /// <param name="crossDiagAllowed">Whether moving across a corner is allowed</param>
     /// <param name="hist">A blank history to store all state changes that took place</param>

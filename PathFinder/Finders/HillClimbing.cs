@@ -9,7 +9,7 @@ namespace PathFinder.Finders {
             List<Node> closed = new List<Node>();
             Node current = start;
 
-            //Update start scores for reference
+            // Update start scores for reference
             start.Reset();
             start.HScore = heuristic(start, end);
 
@@ -18,7 +18,7 @@ namespace PathFinder.Finders {
                 // If the end has been reached return the path
                 if (current.IsEnd) return Util.Backtrace(current);
 
-                // Close the curren't node if it hasn't been done already
+                // Close the current node if it hasn't been done already
                 if (!closed.Contains(current)) {
                     closed.Add(current);
                     hist.Push(current, NodeState.Closed);
@@ -33,7 +33,7 @@ namespace PathFinder.Finders {
                     neighbor.Parent = current;
                     hist.Push(neighbor, NodeState.Open);
                 }
-                // Sort the neigbors so the one with the best score is first
+                // Sort the neighbors so the one with the best score is first
                 neighbors.Sort();
                 // If any neighbors are available, travel to the one with the lowest score. Otherwise backtrack to the parent
                 current = neighbors.Count > 0 ? neighbors[0] : current.Parent;

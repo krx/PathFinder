@@ -3,7 +3,7 @@
 namespace PathFinder.Core {
 
     /// <summary>
-    /// Delegate function definition for all heurisitic functions
+    /// Delegate function definition for all heuristic functions
     /// </summary>
     /// <param name="n">The current node</param>
     /// <param name="end">The end node</param>
@@ -16,7 +16,7 @@ namespace PathFinder.Core {
     internal class Heuristic {
         /// <summary>
         /// Manhattan heuristic
-        /// Returns the sum of the horiztontal and vertical differences between two nodes
+        /// Returns the sum of the horizontal and vertical differences between two nodes
         /// </summary>
         public static HeuristicFunc Manhattan = (n, end)
             => Math.Abs(end.X - n.X) + Math.Abs(end.Y - n.Y);
@@ -34,7 +34,7 @@ namespace PathFinder.Core {
 
         /// <summary>
         /// Chebyshev heuristic
-        /// Returns the maximum of the horiztontal and vertical differences between two nodes
+        /// Returns the maximum of the horizontal and vertical differences between two nodes
         /// </summary>
         public static HeuristicFunc Chebyshev = (n, end)
             => Math.Max(Math.Abs(end.X - n.X), Math.Abs(end.Y - n.Y));

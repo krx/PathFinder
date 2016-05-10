@@ -15,7 +15,7 @@ namespace PathFinder.Finders {
                 // If the end has been reached return the path
                 if (current.IsEnd) return Util.Backtrace(current);
 
-                // Close the curren't node if it hasn't been done already
+                // Close the current node if it hasn't been done already
                 if (!closed.Contains(current)) {
                     closed.Add(current);
                     hist.Push(current, NodeState.Closed);

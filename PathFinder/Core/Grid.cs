@@ -180,7 +180,7 @@ namespace PathFinder.Core {
         }
 
         /// <summary>
-        /// Generates a list of path points from the bracktrace of a search
+        /// Generates a list of path points from the backtrace of a search
         /// </summary>
         /// <param name="trace"></param>
         public void GenPath(List<Node> trace) {

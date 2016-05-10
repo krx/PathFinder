@@ -12,7 +12,7 @@ namespace PathFinder.Core {
     internal class MazeGenerator {
 
         /// <summary>
-        /// Gemerate a random maze on the grid, and create a history of the generation
+        /// Generate a random maze on the grid, and create a history of the generation
         /// Since the grid this is being made for uses whole nodes as the walls, this essentially
         /// has to operate on every other node in both axes
         /// </summary>
@@ -30,15 +30,15 @@ namespace PathFinder.Core {
             // This stack will serve as a way to trace back through the depth-first generation
             Stack<Node> traced = new Stack<Node>();
 
-            // Keep a list of all visited ndoes
+            // Keep a list of all visited nodes
             List<Node> visited = new List<Node> { current };
 
-            // Continue until every node has been visted
+            // Continue until every node has been visited
             while (GetUnvisitedNodes(grid, visited).Count > 0) {
                 // Get all the neighbors of the current node
                 List<Node> neighbors = GetNeighbors(current.X, current.Y, grid, visited);
                 if (neighbors.Count > 0) {
-                    // If there are unvisited neighors, choose one of them at random as the next node
+                    // If there are unvisited neighbors, choose one of them at random as the next node
                     Node neighbor = Util.GetRandomElement(neighbors);
                     traced.Push(current);
 
@@ -53,10 +53,10 @@ namespace PathFinder.Core {
                     current = neighbor;
                     visited.Add(current);
                 } else if (traced.Count > 0) {
-                    // If there were no neighbors, attempt to trace backwards until a new neigbor is found
+                    // If there were no neighbors, attempt to trace backwards until a new neighbor is found
                     current = traced.Pop();
                 } else {
-                    // If the bracktrace is empty, mark the current node as visited
+                    // If the backtrace is empty, mark the current node as visited
                     // and jump to a random node in the grid to start again
                     visited.Add(current);
                     current = RandomNode(grid, visited);
@@ -94,7 +94,7 @@ namespace PathFinder.Core {
 
         /// <summary>
         /// Gathers unvisited neighbors of a node
-        /// Neigbors in this case are two nodes away in the horizontial and vertical directions
+        /// Neighbors in this case are two nodes away in the horizontal and vertical directions
         /// </summary>
         /// <param name="x">X index of the center node</param>
         /// <param name="y">Y index of the center node</param>

@@ -155,7 +155,7 @@
                         </StackPanel>
                     </GroupBox>
 
-                    <!--Controls for selecting how neigboring nodes should be found-->
+                    <!--Controls for selecting how neighboring nodes should be found-->
                     <GroupBox Header="Optional Settings">
                         <StackPanel Orientation="Vertical">
                             <CheckBox Content="Diagonals Allowed"  Name="DiagBox" 
@@ -257,7 +257,7 @@
                                             </BeginStoryboard>
                                         </Trigger.EnterActions>
 
-                                        <!--Fade back in when reenabled-->
+                                        <!--Fade back in when re-enabled-->
                                         <Trigger.ExitActions>
                                             <BeginStoryboard>
                                                 <Storyboard>

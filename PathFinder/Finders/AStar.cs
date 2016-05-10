@@ -4,7 +4,7 @@ using PathFinder.Core;
 
 namespace PathFinder.Finders {
     internal class AStar {
-        // This followes the AlgoFunc template and just calls the extended function
+        // This follows the AlgoFunc template and just calls the extended function
         public static List<Node> Search(Node start, Node end, Grid grid, HeuristicFunc heuristic, bool diagAllowed, bool crossDiagAllowed, History hist) {
             // The default calculation for the G-Score is the same as the Euclidean heuristic
             return Search(start, end, grid, heuristic, diagAllowed, crossDiagAllowed, hist, Heuristic.Euclidean);
@@ -16,7 +16,7 @@ namespace PathFinder.Finders {
         /// <param name="start">The starting Node in the Grid</param>
         /// <param name="end">The ending Node in the Grid</param>
         /// <param name="grid">The Grid containing everything</param>
-        /// <param name="heuristic">Heurisitc function to use for scoring Nodes</param>
+        /// <param name="heuristic">Heuristic function to use for scoring Nodes</param>
         /// <param name="diagAllowed">Whether diagonal movement is allowed</param>
         /// <param name="crossDiagAllowed">Whether moving across a corner is allowed</param>
         /// <param name="hist">A blank history to store all state changes that took place</param>
@@ -42,9 +42,9 @@ namespace PathFinder.Finders {
                 closed.Add(current);
                 hist.Push(current, NodeState.Closed);
 
-                // Process every neighber that isn't closed
+                // Process every neighbor that isn't closed
                 foreach (Node neighbor in Util.GetNeighbors(current, grid, diagAllowed, crossDiagAllowed).Except(closed)) {
-                    // Calculate what the new cost to travel to this neighber would be
+                    // Calculate what the new cost to travel to this neighbor would be
                     double ng = current.GScore + gFunc(current, neighbor);
 
                     // If the node hasn't been opened yet, add it to the open list

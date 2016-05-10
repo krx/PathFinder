@@ -21,7 +21,7 @@ namespace PathFinder.Finders {
                 closed.Add(current);
                 hist.Push(current, NodeState.Closed);
 
-                // Get all neighbors that haven't already been vistied and add them to the open list
+                // Get all neighbors that haven't already been visited and add them to the open list
                 foreach (Node neighbor in Util.GetNeighbors(current, grid, diagAllowed, crossDiagAllowed).Except(closed).Except(open)) {
                     open.Add(neighbor);
                     hist.Push(neighbor, NodeState.Open);

@@ -126,7 +126,7 @@ namespace PathFinder.Core {
         }
 
         /// <summary>
-        /// The parent of this node used for bracktracing
+        /// The parent of this node used for backtracing
         /// </summary>
         public Node Parent { get; set; }
 
