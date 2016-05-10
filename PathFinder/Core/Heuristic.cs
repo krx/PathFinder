@@ -2,7 +2,12 @@
 
 namespace PathFinder.Core {
 
-    // Delegate function definition for all heurisitic functions
+    /// <summary>
+    /// Delegate function definition for all heurisitic functions
+    /// </summary>
+    /// <param name="n">The current node</param>
+    /// <param name="end">The end node</param>
+    /// <returns>A number that gives an estimate of the distance between the current and end Nodes</returns>
     internal delegate double HeuristicFunc(Node n, Node end);
 
     /// <summary>

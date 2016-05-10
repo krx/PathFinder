@@ -7,8 +7,11 @@
         Icon="Images/pathicon.ico">
 
     <Window.Resources>
-        <core:RadioIsCheckedConverter x:Key="RadioIsChecked"></core:RadioIsCheckedConverter>
-        <core:HeuristicsEnabledConverter x:Key="HeuristicsEnabledConverter"></core:HeuristicsEnabledConverter>
+        <!--Static converters-->
+        <core:RadioIsCheckedConverter x:Key="RadioIsChecked" />
+        <core:HeuristicsEnabledConverter x:Key="HeuristicsEnabledConverter" />
+
+        <!--Style for disabled TextBlocks-->
         <Style TargetType="TextBlock" x:Key="TextBlockDisable">
             <Setter Property="Foreground" Value="Black" />
             <Style.Triggers>
@@ -19,16 +22,16 @@
         </Style>
     </Window.Resources>
 
+    <!--Main panel-->
     <DockPanel>
+        <!--Control panel docked on the right-->
         <DockPanel DockPanel.Dock="Right" Background="White" Panel.ZIndex="99">
+            <!--About button docked at bottom right corner-->
+            <Button Margin="0,3,6,3" Padding="2"
+                    HorizontalAlignment="Right" Content="About"
+                    Click="About_Click" DockPanel.Dock="Bottom" />
 
-
-            <Grid DockPanel.Dock="Bottom">
-                <Button Margin="0,3,6,3" Padding="2" 
-                        HorizontalAlignment="Right" Content="About"
-                        Click="About_Click" />
-            </Grid>
-
+            <!--Controls that modify the entire grid-->
             <GroupBox Header="Grid Controls" DockPanel.Dock="Bottom">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -49,6 +52,7 @@
                 </Grid>
             </GroupBox>
 
+            <!--All controls relating to the playback of the search animation-->
             <GroupBox Header="Search Controls" DockPanel.Dock="Bottom">
                 <StackPanel Orientation="Vertical">
                     <Grid>
@@ -61,6 +65,7 @@
                             <ColumnDefinition Width="65" />
                         </Grid.ColumnDefinitions>
 
+                        <!--Main playback buttons-->
                         <Button Grid.Column="0" Command="{Binding PlayCommand}">
                             <TextBlock Text="Play  Search" TextAlignment="Center" 
                                    TextWrapping="Wrap" Style="{StaticResource TextBlockDisable}" />
@@ -83,6 +88,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
+                        <!--Playback step buttons-->
                         <Button Grid.Column="0" Command="{Binding StepBackwardCommand}" >
                             <TextBlock Text="Step Backward" TextAlignment="Center" 
                                    TextWrapping="Wrap" Style="{StaticResource TextBlockDisable}" />
@@ -92,6 +98,8 @@
                                    TextWrapping="Wrap" Style="{StaticResource TextBlockDisable}" />
                         </Button>
                     </Grid>
+
+                    <!--Slider to allow for variable playback speed-->
                     <Label Content="Animation Speed:"/>
                     <Slider Minimum="0" Maximum="30"
                             IsSnapToTickEnabled="True" IsDirectionReversed="True"
@@ -99,6 +107,7 @@
                 </StackPanel>
             </GroupBox>
 
+            <!--Statistics about the resulting path from a search-->
             <GroupBox Header="Stats" DockPanel.Dock="Bottom">
                 <StackPanel  Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
@@ -116,8 +125,10 @@
                 </StackPanel>
             </GroupBox>
 
+            <!--All controls for setting up the search options-->
             <GroupBox Header="Search Options">
                 <StackPanel Orientation="Vertical">
+                    <!--Algorithm selection group-->
                     <GroupBox Header="Algorithm">
                         <StackPanel Orientation="Vertical">
                             <RadioButton Content="A-Star" IsChecked="{Binding Algo, 
@@ -144,6 +155,7 @@
                         </StackPanel>
                     </GroupBox>
 
+                    <!--Controls for selecting how neigboring nodes should be found-->
                     <GroupBox Header="Optional Settings">
                         <StackPanel Orientation="Vertical">
                             <CheckBox Content="Diagonals Allowed"  Name="DiagBox" 
@@ -158,6 +170,7 @@
                                     </ToolTip>
                                 </CheckBox.ToolTip>
                             </CheckBox>
+
                             <CheckBox Content="Corner Crossing Allowed" 
                                       IsEnabled="{Binding ElementName=DiagBox, Path=IsChecked}"
                                       IsChecked="{Binding CornerCutAllowed}">
@@ -176,6 +189,8 @@
                         </StackPanel>
                     </GroupBox>
 
+                    <!--Group for selecting the heuristic function to be used in searching-->
+                    <!--This will get disabled when an algorithm that doesn't use heuristics is selected-->
                     <GroupBox Header="Heuristic Function"
                               IsEnabled="{Binding Algo, Converter={StaticResource HeuristicsEnabledConverter}}">
                         <StackPanel Orientation="Vertical">
@@ -194,6 +209,7 @@
                                     </ToolTip>
                                 </RadioButton.ToolTip>
                             </RadioButton>
+
                             <RadioButton Content="Euclidean" IsChecked="{Binding HeuristicFunction, 
 								Converter={StaticResource RadioIsChecked}, 
 								ConverterParameter={x:Static core:Heuristic.Euclidean}}">
@@ -209,6 +225,7 @@
                                     </ToolTip>
                                 </RadioButton.ToolTip>
                             </RadioButton>
+
                             <RadioButton Content="Chebyshev" IsChecked="{Binding HeuristicFunction, 
 								Converter={StaticResource RadioIsChecked}, 
 								ConverterParameter={x:Static core:Heuristic.Chebyshev}}">
@@ -231,6 +248,7 @@
                             <Style TargetType="GroupBox">
                                 <Style.Triggers>
                                     <Trigger Property="IsEnabled" Value="False">
+                                        <!--Fade out when disabled-->
                                         <Trigger.EnterActions>
                                             <BeginStoryboard>
                                                 <Storyboard>
@@ -238,6 +256,8 @@
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </Trigger.EnterActions>
+
+                                        <!--Fade back in when reenabled-->
                                         <Trigger.ExitActions>
                                             <BeginStoryboard>
                                                 <Storyboard>
@@ -253,18 +273,17 @@
                 </StackPanel>
             </GroupBox>
         </DockPanel>
-        <Grid>
 
-            <!-- Canvas to display all dynamic elements -->
+        <!--This takes up the remainder of the screen space on the main panel-->
+        <Grid>
+            <!--Canvas to display all dynamically loaded elements (Nodes)-->
             <ItemsControl  Name="ItemsCanvas" Padding="0"
-                           ScrollViewer.CanContentScroll="True"
-                           VirtualizingStackPanel.IsVirtualizing="True"
-                           VirtualizingStackPanel.VirtualizationMode="Recycling" 
                            ItemsSource="{Binding Grid.Nodes, IsAsync=True}">
 
                 <ItemsControl.Resources>
-                    <!--Template for Node-->
+                    <!--View template for Node-->
                     <DataTemplate DataType="{x:Type core:Node}">
+                        <!--All Nodes are displayed as Rectangles-->
                         <Rectangle Stroke="#CC000000" StrokeThickness="0.25"
                                    RenderTransformOrigin="0.5,0.5"
                                    Width="{x:Static core:Node.Nodesize}"
@@ -272,26 +291,33 @@
                                    Fill="White" Name="nodeRect"
                                    ToolTipService.InitialShowDelay="500">
 
+                            <!--Using RenderTransform instead of Canvas options for performance-->
                             <Rectangle.RenderTransform>
                                 <TransformGroup>
+                                    <!--Default scale, will be used in animations-->
                                     <ScaleTransform x:Name="rectScale" ScaleX="1" ScaleY="1" />
-                                    <TranslateTransform X="{Binding CoordX}" Y="{Binding CoordY}"></TranslateTransform>
+                                    <!--Translate the Rectangle to the correct location-->
+                                    <TranslateTransform X="{Binding CoordX}" Y="{Binding CoordY}" />
                                 </TransformGroup>
                             </Rectangle.RenderTransform>
+
+                            <!--Send a command to update the Node appearance when this view is loaded-->
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Loaded">
-                                    <i:InvokeCommandAction Command="{Binding UpdateColorCommand}"></i:InvokeCommandAction>
+                                    <i:InvokeCommandAction Command="{Binding UpdateColorCommand}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
 
-                            <Rectangle.ToolTip >
+                            <!--Tooltip to display this Node's scores on mouse hover-->
+                            <Rectangle.ToolTip>
                                 <ToolTip StaysOpen="True" Placement="RelativePoint"
-                                         HorizontalOffset="20" VerticalOffset="20">
+                                         HorizontalOffset="20" VerticalOffset="20"
+                                         FontSize="14" FontWeight="Bold">
                                     <StackPanel>
-                                        <TextBlock Text="{Binding GScore, StringFormat='{}G={0:f4}'}" FontSize="14" FontWeight="Bold"/>
-                                        <TextBlock Text="{Binding HScore, StringFormat='{}H={0:f4}'}" FontSize="14" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding GScore, StringFormat='{}G={0:f4}'}" />
+                                        <TextBlock Text="{Binding HScore, StringFormat='{}H={0:f4}'}" />
                                         <Separator />
-                                        <TextBlock Text="{Binding FScore, StringFormat='{}F={0:f4}'}" FontSize="14" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding FScore, StringFormat='{}F={0:f4}'}" />
                                     </StackPanel>
                                 </ToolTip>
                             </Rectangle.ToolTip>
@@ -299,6 +325,7 @@
                     </DataTemplate>
                 </ItemsControl.Resources>
 
+                <!--Internally uses a canvas to display all items-->
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas IsItemsHost="True" Background="White"
@@ -308,17 +335,20 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
+                <!--Style for the item containers-->
                 <ItemsControl.ItemContainerStyle>
                     <Style TargetType="ContentPresenter">
                         <Style.Triggers>
+                            <!--Forces whichever node the mouse is currently over to be drawn above all others-->
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Panel.ZIndex" Value="99"></Setter>
+                                <Setter Property="Panel.ZIndex" Value="99" />
                             </Trigger>
                         </Style.Triggers>
                     </Style>
                 </ItemsControl.ItemContainerStyle>
             </ItemsControl>
 
+            <!--Polyline to display the resulting path, drawn above all nodes-->
             <Polyline Points="{Binding Grid.Path}"  Panel.ZIndex="999"
                       Stroke="Yellow" StrokeThickness="4" Name="PathLine"
                       IsHitTestVisible="False" />

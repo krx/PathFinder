@@ -32,10 +32,9 @@ namespace PathFinder.Core {
         private string _statTime;
         private string _statNodesExplored;
 
-        // Current node indices the moust is hovering over
+        // Current node indices the mouse is hovering over
         private int mouseXIdx;
         private int mouseYIdx;
-
 
         // The state that will be painted as the mouse is dragged
         private NodeState dropType = NodeState.Empty;
@@ -95,7 +94,6 @@ namespace PathFinder.Core {
             set { _diagonalsAllowed = value; OnPropertyChanged("DiagonalsAllowed"); }
         }
 
-
         /// <summary>
         /// Wether the diagonals in the path can cross the corner of a wall
         /// </summary>
@@ -138,6 +136,9 @@ namespace PathFinder.Core {
         public ICommand ClearPathCommand { get; }
         public ICommand GenMazeCommand { get; }
 
+        /// <summary>
+        /// Create and initializes this ViewModel
+        /// </summary>
         public MainViewModel() {
             Grid = new Grid();
             hist = new History(Grid);
@@ -200,6 +201,9 @@ namespace PathFinder.Core {
             return (playState == PlaybackState.Modified || playState == PlaybackState.SearchComplete) && playState != PlaybackState.GeneratingMaze;
         }
 
+        /// <summary>
+        /// Updates the string properties for all result stats
+        /// </summary>
         public void UpdateStats() {
             // Update stat strings
             StatPathLength = $"{pathLength:f2}";

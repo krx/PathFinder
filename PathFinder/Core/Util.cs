@@ -10,7 +10,7 @@ namespace PathFinder.Core {
     /// Helpful utitiliy functions used throughout the program
     /// </summary>
     internal static class Util {
-        private static readonly Random rnd = new Random();
+        private static readonly Random Rand = new Random();
 
         /// <summary>
         /// Returns a random element of a list
@@ -20,7 +20,7 @@ namespace PathFinder.Core {
         /// <returns>Random element if the list had any, null otherwise</returns>
         public static T GetRandomElement<T>(IList<T> list) {
             if (list.Count == 0) throw new InvalidOperationException("Cannot get an element of an empty list");
-            return list[rnd.Next(list.Count)];
+            return list[Rand.Next(list.Count)];
         }
 
         /// <summary>

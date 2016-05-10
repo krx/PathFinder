@@ -41,20 +41,43 @@ namespace PathFinder.Core {
         // A command triggered when the node is visually loaded to update its color
         public ICommand UpdateColorCommand { get; }
 
-        // The x/y indices of this node, and converters to screen coordinates
-        // Index in the grid
+        // Grid Coordinates
+
+        /// <summary>
+        /// This Node's X coordinate in the Grid
+        /// </summary>
         public int X { get; }
+
+        /// <summary>
+        /// This Node's Y coordinate in the Grid
+        /// </summary>
         public int Y { get; }
 
-        // Top left corner coordinates
+        // Screen coordinates
+
+        /// <summary>
+        /// The top-left X coordinate of this Node on the screen
+        /// </summary>
         public int CoordX => (int) (X * Nodesize);
+
+        /// <summary>
+        /// The top-left Y coordinate of this Node on the screen
+        /// </summary>
         public int CoordY => (int) (Y * Nodesize);
 
-        // Center coordinates
+        /// <summary>
+        /// The center X coordinate of this Node on the screen
+        /// </summary>
         public int CenterX => (int) (CoordX + Nodesize / 2.0);
+
+        /// <summary>
+        /// The center Y coordinate of this Node on the screen
+        /// </summary>
         public int CenterY => (int) (CoordY + Nodesize / 2.0);
 
-        // Scoring values of this node
+        /// <summary>
+        /// The G (Cost) score of this Node
+        /// </summary>
         public double GScore {
             get { return _gScore; }
             set {
@@ -64,6 +87,9 @@ namespace PathFinder.Core {
             }
         }
 
+        /// <summary>
+        /// The H (Heuristic) score of this Node
+        /// </summary>
         public double HScore {
             get { return _hScore; }
             set {
@@ -73,6 +99,9 @@ namespace PathFinder.Core {
             }
         }
 
+        /// <summary>
+        /// The total score of this Node (G + H)
+        /// </summary>
         public double FScore => GScore + HScore;
 
         /// <summary>
@@ -96,7 +125,9 @@ namespace PathFinder.Core {
             }
         }
 
-        // The parent of this node used for bracktracing
+        /// <summary>
+        /// The parent of this node used for bracktracing
+        /// </summary>
         public Node Parent { get; set; }
 
         // Shorthand properties for states

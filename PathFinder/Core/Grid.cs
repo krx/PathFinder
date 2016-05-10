@@ -10,11 +10,13 @@ namespace PathFinder.Core {
     /// A grid containing nodes and a path between them
     /// </summary>
     internal class Grid : NotifyPropertyChangedBase {
+        // Backing variables
+        private List<Node> _nodes;
+        private PointCollection _path;
 
         /// <summary>
         /// Direct list of all nodes contained in this grid
         /// </summary>
-        private List<Node> _nodes;
         public List<Node> Nodes {
             get { return _nodes; }
             set { _nodes = value; OnPropertyChanged("Nodes"); }
@@ -23,21 +25,38 @@ namespace PathFinder.Core {
         /// <summary>
         /// Collection of points that make up the path connecting this grid's nodes
         /// </summary>
-        private PointCollection _path;
         public PointCollection Path {
             get { return _path; }
             set { _path = value; OnPropertyChanged("Path"); }
         }
 
-        // Grid size
+        /// <summary>
+        /// The current width of this Grid in Nodes
+        /// </summary>
         public int Width { get; private set; }
+
+        /// <summary>
+        /// The current height of this Grid in Nodes
+        /// </summary>
         public int Height { get; private set; }
 
-        // Node accessors
+        /// <summary>
+        /// Finds and returns the start Node
+        /// </summary>
         public Node StartNode => Nodes.First(n => n.State == NodeState.Start);
+
+        /// <summary>
+        /// Finds and returns the end Node
+        /// </summary>
         public Node EndNode => Nodes.First(n => n.State == NodeState.End);
 
-        // Access any node by row/col (y/x) index
+        /// <summary>
+        /// Allows read access to any Node by row/col (y/x) indexing
+        /// The Node itself may be modified, but cannot be replaced
+        /// </summary>
+        /// <param name="row">Node row</param>
+        /// <param name="col">Node column</param>
+        /// <returns>Node located at the given coordinates</returns>
         public Node this[int row, int col] => Nodes[row * Width + col];
 
         /// <summary>
@@ -47,7 +66,6 @@ namespace PathFinder.Core {
             Nodes = new List<Node>();
             Path = new PointCollection();
             InitializeGrid(5, 5);
-
         }
 
         /// <summary>

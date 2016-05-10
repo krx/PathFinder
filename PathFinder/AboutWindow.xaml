@@ -4,7 +4,10 @@
         WindowStartupLocation="CenterOwner"
         Title="About PathFinder" Height="200" Width="300"
         Icon="Images\pathicon.ico">
+
+    <!--Main panel-->
     <DockPanel Margin="10">
+        <!--Bottom panel to hold github link and close button-->
         <DockPanel DockPanel.Dock="Bottom">
             <TextBlock DockPanel.Dock="Left">
                 <Hyperlink NavigateUri="https://github.com/krx/PathFinder" 
@@ -18,6 +21,8 @@
                     VerticalAlignment="Bottom" Click="Close_Click"/>
         </DockPanel>
 
+        <!--Fills up the rest of the main panel-->
+        <!--Contains the program information-->
         <StackPanel Orientation="Vertical" >
             <Label FontWeight="Bold" FontSize="16" Content="PathFinder" />
             <StackPanel Orientation="Horizontal">
