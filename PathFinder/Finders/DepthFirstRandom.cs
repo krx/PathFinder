@@ -7,7 +7,7 @@ namespace PathFinder.Finders {
         public static List<Node> Search(Node start, Node end, Grid grid, HeuristicFunc heuristic, bool diagAllowed, bool crossDiagAllowed, History hist) {
             List<Node> closed = new List<Node>();
             Node current = start;
-            start.Parent = null;
+            start.Reset();
             while (current != null) {
                 if (current.IsEnd) return Util.Backtrace(current);
 

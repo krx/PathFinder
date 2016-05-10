@@ -94,7 +94,7 @@
                     </Grid>
                     <Label Content="Animation Speed:"/>
                     <Slider Minimum="0" Maximum="30"
-                            IsSnapToTickEnabled="True" IsDirectionReversed="True" 
+                            IsSnapToTickEnabled="True" IsDirectionReversed="True"
                             Value="{Binding AnimSleepTime}"/>
                 </StackPanel>
             </GroupBox>
@@ -269,7 +269,9 @@
                                    RenderTransformOrigin="0.5,0.5"
                                    Width="{x:Static core:Node.Nodesize}"
                                    Height="{x:Static core:Node.Nodesize}"
-                                   Fill="White" Name="nodeRect">
+                                   Fill="White" Name="nodeRect"
+                                   ToolTipService.InitialShowDelay="500">
+
                             <Rectangle.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform x:Name="rectScale" ScaleX="1" ScaleY="1" />
@@ -281,6 +283,18 @@
                                     <i:InvokeCommandAction Command="{Binding UpdateColorCommand}"></i:InvokeCommandAction>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
+
+                            <Rectangle.ToolTip >
+                                <ToolTip StaysOpen="True" Placement="RelativePoint"
+                                         HorizontalOffset="20" VerticalOffset="20">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding GScore, StringFormat='{}G={0:f4}'}" FontSize="14" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding HScore, StringFormat='{}H={0:f4}'}" FontSize="14" FontWeight="Bold"/>
+                                        <Separator />
+                                        <TextBlock Text="{Binding FScore, StringFormat='{}F={0:f4}'}" FontSize="14" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </ToolTip>
+                            </Rectangle.ToolTip>
                         </Rectangle>
                     </DataTemplate>
                 </ItemsControl.Resources>
@@ -306,7 +320,8 @@
             </ItemsControl>
 
             <Polyline Points="{Binding Grid.Path}"  Panel.ZIndex="999"
-                      Stroke="Yellow" StrokeThickness="4" Name="PathLine" />
+                      Stroke="Yellow" StrokeThickness="4" Name="PathLine"
+                      IsHitTestVisible="False" />
         </Grid>
     </DockPanel>
 </Window>

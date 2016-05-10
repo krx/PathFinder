@@ -12,7 +12,11 @@ namespace PathFinder.Finders {
         public static List<Node> Search(Node start, Node end, Grid grid, HeuristicFunc heuristic, bool diagAllowed, bool crossDiagAllowed, History hist, HeuristicFunc gFunc) {
             List<Node> closed = new List<Node>();
             List<Node> open = new List<Node> { start };
+
+            // Update start scores for reference
             start.Reset();
+            start.HScore = heuristic(start, end);
+
             while (open.Count > 0) {
                 Node current = open.PopFirst();
                 closed.Add(current);

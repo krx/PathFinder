@@ -20,6 +20,10 @@ namespace PathFinder.Core {
     /// An element/cell of the grid
     /// </summary>
     internal class Node : NotifyPropertyChangedBase, ICloneable, IComparable<Node>, IEquatable<Node> {
+        // Backing variables
+        private NodeState _state;
+        private double _gScore;
+        private double _hScore;
 
         // Global visual size of a node
         public static readonly double Nodesize = 30;
@@ -51,24 +55,29 @@ namespace PathFinder.Core {
         public int CenterY => (int) (CoordY + Nodesize / 2.0);
 
         // Scoring values of this node
-        public double GScore { get; set; }
-        public double HScore { get; set; }
+        public double GScore {
+            get { return _gScore; }
+            set {
+                _gScore = value;
+                OnPropertyChanged("GScore");
+                OnPropertyChanged("FScore");
+            }
+        }
+
+        public double HScore {
+            get { return _hScore; }
+            set {
+                _hScore = value;
+                OnPropertyChanged("HScore");
+                OnPropertyChanged("FScore");
+            }
+        }
+
         public double FScore => GScore + HScore;
-
-        // The parent of this node used for bracktracing
-        public Node Parent { get; set; }
-
-        // Shorthand properties for states
-        public bool IsWalkable => State != NodeState.Wall;
-        public bool IsStart => State == NodeState.Start;
-        public bool IsEnd => State == NodeState.End;
-        public bool IsClosed => State == NodeState.Closed;
-        public bool IsOpen => State == NodeState.Open;
 
         /// <summary>
         /// The current state of this node
         /// </summary>
-        private NodeState _state;
         public NodeState State {
             get { return _state; }
             set {
@@ -79,9 +88,23 @@ namespace PathFinder.Core {
 
                 // Update this node's color to the new state
                 UpdateColor(prev);
+
+                // If the new state isn't open or closed, the scores are cleared
+                if (value != NodeState.Open && value != NodeState.Closed) {
+                    Reset();
+                }
             }
         }
 
+        // The parent of this node used for bracktracing
+        public Node Parent { get; set; }
+
+        // Shorthand properties for states
+        public bool IsWalkable => State != NodeState.Wall;
+        public bool IsStart => State == NodeState.Start;
+        public bool IsEnd => State == NodeState.End;
+        public bool IsClosed => State == NodeState.Closed;
+        public bool IsOpen => State == NodeState.Open;
 
         /// <summary>
         /// Create a new Node
