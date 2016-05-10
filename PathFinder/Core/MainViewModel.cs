@@ -222,8 +222,7 @@ namespace PathFinder.Core {
             hist.Clear();
 
             // Time how long the search takes
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            Stopwatch sw = Stopwatch.StartNew();
             path = Algo(Grid.StartNode, Grid.EndNode, Grid, HeuristicFunction, DiagonalsAllowed, CornerCutAllowed, hist);
             sw.Stop();
 
