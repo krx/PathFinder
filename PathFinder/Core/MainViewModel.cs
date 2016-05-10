@@ -50,7 +50,6 @@ namespace PathFinder.Core {
         private volatile PlaybackState playState = PlaybackState.Modified;
         private Thread playThread;
 
-
         /// <summary>
         /// Grid containing all nodes
         /// </summary>
@@ -282,6 +281,9 @@ namespace PathFinder.Core {
                 playState = PlaybackState.Paused;
             }
 
+            // Recalculate if needed
+            CalculatePath();
+
             // If the end of the animation has been reached, draw the path and update display
             if (hist.AtEnd) {
                 // Update display
@@ -294,10 +296,7 @@ namespace PathFinder.Core {
                 // Force commands to update
                 CommandManager.InvalidateRequerySuggested();
             } else {
-                // Recalculate if needed
-                CalculatePath();
-
-                //Step once
+                // Step once
                 hist.Step();
                 playState = PlaybackState.Paused;
             }
@@ -373,7 +372,7 @@ namespace PathFinder.Core {
             mouseXIdx = (int) (p.X / Node.Nodesize);
             mouseYIdx = (int) (p.Y / Node.Nodesize);
 
-            //Dragging
+            // Dragging
             if (Mouse.LeftButton == MouseButtonState.Pressed) {
                 switch (dropType) {
                     // Special start/end cases

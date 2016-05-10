@@ -60,7 +60,7 @@ namespace PathFinder.Core {
             Width = Math.Max(width, 2);
             Height = Math.Max(height, 2);
 
-            //Generate the new list of nodes
+            // Generate the new list of nodes
             List<Node> newNodes = new List<Node>();
             for (int y = 0; y < Height; ++y) {
                 for (int x = 0; x < Width; ++x) {
@@ -83,7 +83,7 @@ namespace PathFinder.Core {
             // Recreate the grid with the new sizes
             InitializeGrid((pxWidth / (int) Node.Nodesize), (pxHeight / (int) Node.Nodesize));
 
-            //Copy over the previous grid state, keeping track of start/end nodes
+            // Copy over the previous grid state, keeping track of start/end nodes
             bool startCopied = false, endCopied = false;
             for (int row = 0; row < Math.Min(Height, oldHeight); ++row) {
                 for (int col = 0; col < Math.Min(Width, oldWidth); ++col) {
@@ -94,7 +94,7 @@ namespace PathFinder.Core {
                 }
             }
 
-            //Check if the start/end nodes are missing, replace them as one of the first two nodes if they are
+            // Check if the start/end nodes are missing, replace them as one of the first two nodes if they are
             if (!startCopied) {
                 this[0, this[0, 0].State == NodeState.End ? 1 : 0].State = NodeState.Start;
             }

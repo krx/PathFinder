@@ -130,7 +130,7 @@ namespace PathFinder.Core {
                         scale.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnim);
                     }
 
-                    //Color animation
+                    // Color animation
                     Storyboard sb = new Storyboard();
                     ColorAnimation anim = new ColorAnimation(cmap[old], cmap[State], TimeSpan.FromMilliseconds(75));
                     Storyboard.SetTarget(anim, rect);
